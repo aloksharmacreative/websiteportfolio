@@ -757,6 +757,15 @@ def admin_settings():
         
     return render_template('admin_settings.html')
 
+@app.errorhandler(Exception)
+def handle_exception(e):
+    from werkzeug.exceptions import HTTPException
+    if isinstance(e, HTTPException):
+        return e
+    import traceback
+    tb = traceback.format_exc()
+    return f"<h2>500 Internal Server Error (Traceback)</h2><pre>{tb}</pre>", 500
+
 @app.errorhandler(413)
 def request_entity_too_large(error):
     flash("The uploaded file is too large! Maximum allowed size is 16MB. Please compress the image or use a URL.", "error")
