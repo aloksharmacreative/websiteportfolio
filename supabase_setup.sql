@@ -175,3 +175,23 @@ DROP POLICY IF EXISTS "Allow public update on reviews" ON reviews;
 CREATE POLICY "Allow public update on reviews" ON reviews FOR UPDATE USING (true);
 DROP POLICY IF EXISTS "Allow public delete on reviews" ON reviews;
 CREATE POLICY "Allow public delete on reviews" ON reviews FOR DELETE USING (true);
+
+-- 11. Storage Setup for portfolio bucket
+-- Create the bucket if it does not exist and ensure it is public
+INSERT INTO storage.buckets (id, name, public)
+VALUES ('portfolio', 'portfolio', true)
+ON CONFLICT (id) DO UPDATE SET public = true;
+
+-- Enable public access policies for storage objects inside the 'portfolio' bucket
+DROP POLICY IF EXISTS "Public Read Access" ON storage.objects;
+CREATE POLICY "Public Read Access" ON storage.objects FOR SELECT USING (bucket_id = 'portfolio');
+
+DROP POLICY IF EXISTS "Public Insert Access" ON storage.objects;
+CREATE POLICY "Public Insert Access" ON storage.objects FOR INSERT WITH CHECK (bucket_id = 'portfolio');
+
+DROP POLICY IF EXISTS "Public Update Access" ON storage.objects;
+CREATE POLICY "Public Update Access" ON storage.objects FOR UPDATE USING (bucket_id = 'portfolio');
+
+DROP POLICY IF EXISTS "Public Delete Access" ON storage.objects;
+CREATE POLICY "Public Delete Access" ON storage.objects FOR DELETE USING (bucket_id = 'portfolio');
+

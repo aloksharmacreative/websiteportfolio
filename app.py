@@ -511,12 +511,17 @@ def project_new():
                 
                 public_url = database.upload_to_supabase_storage(file_data, unique_filename, mime_type)
                 if not public_url:
-                    file.save(os.path.join(app.config['UPLOAD_FOLDER'], unique_filename))
-                    public_url = f"/static/uploads/{unique_filename}"
+                    try:
+                        file.save(os.path.join(app.config['UPLOAD_FOLDER'], unique_filename))
+                        public_url = f"/static/uploads/{unique_filename}"
+                    except Exception as save_err:
+                        print(f"Failed to save file locally on read-only system: {save_err}")
+                        public_url = None
                     
-                media_gallery_urls.append(public_url)
-                if not original_image_url and mime_type.startswith("image/"):
-                    original_image_url = public_url
+                if public_url:
+                    media_gallery_urls.append(public_url)
+                    if not original_image_url and mime_type.startswith("image/"):
+                        original_image_url = public_url
                     
         # Check if cropped data is sent
         cropped_image_data = request.form.get('cropped_image_data', '').strip()
@@ -618,12 +623,17 @@ def project_edit(project_id):
                 
                 public_url = database.upload_to_supabase_storage(file_data, unique_filename, mime_type)
                 if not public_url:
-                    file.save(os.path.join(app.config['UPLOAD_FOLDER'], unique_filename))
-                    public_url = f"/static/uploads/{unique_filename}"
+                    try:
+                        file.save(os.path.join(app.config['UPLOAD_FOLDER'], unique_filename))
+                        public_url = f"/static/uploads/{unique_filename}"
+                    except Exception as save_err:
+                        print(f"Failed to save file locally on read-only system: {save_err}")
+                        public_url = None
                     
-                new_gallery_urls.append(public_url)
-                if not original_image_url and mime_type.startswith("image/"):
-                    original_image_url = public_url
+                if public_url:
+                    new_gallery_urls.append(public_url)
+                    if not original_image_url and mime_type.startswith("image/"):
+                        original_image_url = public_url
                     
         media_gallery_urls.extend(new_gallery_urls)
         
