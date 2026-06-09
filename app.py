@@ -14,7 +14,7 @@ import database
 load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = os.environ.get('FLASK_SECRET_KEY', 'default-session-secret-key-12345')
+app.secret_key = os.environ.get('FLASK_SECRET_KEY', 'default-session-secret-key-12345').strip().strip('"').strip("'")
 
 # Paths & File Upload Setup
 UPLOAD_FOLDER = os.path.join(app.root_path, 'static', 'uploads')
@@ -28,9 +28,9 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 # Mail & Admin Configuration
-GMAIL_USER = os.environ.get('GMAIL_USER', 'aloksharma.creative@gmail.com')
-GMAIL_PASS = os.environ.get('GMAIL_PASS', '')  # Set Gmail App Password here
-ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD', 'admin123')
+GMAIL_USER = os.environ.get('GMAIL_USER', 'aloksharma.creative@gmail.com').strip().strip('"').strip("'")
+GMAIL_PASS = os.environ.get('GMAIL_PASS', '').strip().strip('"').strip("'")  # Set Gmail App Password here
+ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD', 'admin123').strip().strip('"').strip("'")
 
 def send_notification_email(subject, body, recipient=GMAIL_USER):
     """Sends a notification email. Logs to console and sends via SMTP if GMAIL_PASS is configured."""

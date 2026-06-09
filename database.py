@@ -5,8 +5,8 @@ from dotenv import load_dotenv
 # Load env variables for standalone script imports
 load_dotenv()
 
-SUPABASE_URL = os.environ.get('SUPABASE_URL', 'https://kqpbejqntgbwxsbsuxfk.supabase.co')
-SUPABASE_KEY = os.environ.get('SUPABASE_KEY', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtxcGJlanFudGdid3hzYnN1eGZrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA5Mjk0NTYsImV4cCI6MjA5NjUwNTQ1Nn0.J0ZRKAY6HIA1SP5I1T83QGDGTEv2fVwI3Cqepq4A8S4')
+SUPABASE_URL = os.environ.get('SUPABASE_URL', 'https://kqpbejqntgbwxsbsuxfk.supabase.co').strip().strip('"').strip("'")
+SUPABASE_KEY = os.environ.get('SUPABASE_KEY', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtxcGJlanFudGdid3hzYnN1eGZrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA5Mjk0NTYsImV4cCI6MjA5NjUwNTQ1Nn0.J0ZRKAY6HIA1SP5I1T83QGDGTEv2fVwI3Cqepq4A8S4').strip().strip('"').strip("'")
 
 def get_headers():
     return {
