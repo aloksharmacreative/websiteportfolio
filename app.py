@@ -135,7 +135,7 @@ DEFAULT_SETTINGS = {
     'hero_description': 'I create intuitive digital experiences, meaningful brands, and visually compelling designs that help businesses grow.',
     'hero_image_url': 'https://uxmagic.blob.core.windows.net/user/6a25a369277cb05ad3d0b425/project-assets/6a25f802dabb320111e4b8ed/work_pfpwide-1780873234357-bq8w5hzew.jpg',
     'about_heading': 'Hi, I\'m Alok Sharma.',
-    'about_bio_p1': 'I\'m a passionate UI/UX and Graphic Designer based in Delhi, India, with over 5 years of experience crafting digital products that people love to use.',
+    'about_bio_p1': 'I\'m a passionate UI/UX and Graphic Designer based in Delhi, India, with over 1+ years of experience crafting digital products that people love to use.',
     'about_bio_p2': 'My journey in design started with a fascination for how visual elements communicate stories. Over the years, I\'ve transitioned from purely graphic design to focusing deeply on user experience, realizing that the best designs are those that solve real problems seamlessly.',
     'about_bio_p3': 'I believe in a research-driven approach where aesthetics meet functionality. Whether I\'m designing a complex SaaS dashboard or a vibrant brand identity, my goal is always to create an emotional connection between the product and the user.',
     'about_quote': 'Good design is not just what it looks like, it\'s how it works and how it makes people feel.',
