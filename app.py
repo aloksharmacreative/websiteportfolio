@@ -165,6 +165,10 @@ def inject_global_vars():
 
 # ----------------- CLIENT-FACING ROUTES -----------------
 
+@app.route('/health')
+def health():
+    return jsonify({"status": "healthy"})
+
 @app.route('/')
 def home():
     """Serves the main landing page, listing selected projects and reviews."""
