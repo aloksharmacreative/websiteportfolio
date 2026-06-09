@@ -178,7 +178,7 @@ def home():
     all_projects = database.get_projects()
     case_studies = [p for p in all_projects if p.get('is_featured_case_study')]
     projects = all_projects[:6]
-    reviews = database.get_reviews()
+    reviews = database.get_reviews(only_approved=True)
     return render_template('home.html', projects=projects, case_studies=case_studies, reviews=reviews)
 
 @app.route('/projects')
@@ -464,7 +464,7 @@ def admin_dashboard():
     messages = database.get_messages()
     hires = database.get_hires()
     bookings = database.get_bookings()
-    reviews = database.get_reviews()
+    reviews = database.get_reviews(only_approved=False)
     return render_template('admin_dashboard.html', 
                            projects=projects, 
                            messages=messages, 
@@ -807,9 +807,20 @@ def submit_review():
     if not success:
         flash(f"Error saving review: {err_msg}", "error")
     else:
-        flash("Thank you for your feedback! Your review has been published.", "success")
+        flash("Thank you for your feedback! Your review has been submitted for approval.", "success")
         
     return redirect(url_for('home', _anchor='reviews'))
+
+@app.route('/admin/review/approve/<int:review_id>', methods=['POST'])
+@login_required
+def review_approve(review_id):
+    """Handles approving a client review from the admin dashboard."""
+    success, err_msg = database.approve_review(review_id)
+    if not success:
+        flash(f"Publish failed: {err_msg}", "error")
+    else:
+        flash("Review published successfully.", "success")
+    return redirect(url_for('admin_dashboard'))
 
 @app.route('/admin/review/delete/<int:review_id>', methods=['POST'])
 @login_required
@@ -826,3 +837,4 @@ def review_delete(review_id):
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
+

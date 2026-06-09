@@ -294,6 +294,7 @@
           <th class="py-3 px-6">Client Name</th>
           <th class="py-3 px-6">Role / Company</th>
           <th class="py-3 px-6">Rating</th>
+          <th class="py-3 px-6">Status</th>
           <th class="py-3 px-6">Review Content</th>
           <th class="py-3 px-6 text-right">Actions</th>
         </tr>
@@ -313,13 +314,29 @@
               {% endfor %}
             </div>
           </td>
+          <td class="py-3 px-6">
+            {% if r.is_approved %}
+            <span class="px-2 py-0.5 bg-green-100 text-green-700 text-[10px] font-bold rounded-full">Published</span>
+            {% else %}
+            <span class="px-2 py-0.5 bg-yellow-100 text-yellow-700 text-[10px] font-bold rounded-full">Pending</span>
+            {% endif %}
+          </td>
           <td class="py-3 px-6 text-gray-500 max-w-md whitespace-pre-wrap leading-relaxed">{{ r.content }}</td>
           <td class="py-3 px-6 text-right">
-            <form action="/admin/review/delete/{{ r.id }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this review?');">
-              <button class="p-2 text-gray-600 hover:text-red-600 transition-colors" title="Delete Review" type="submit">
-                <iconify-icon class="text-lg" icon="lucide:trash-2"></iconify-icon>
-              </button>
-            </form>
+            <div class="flex justify-end items-center gap-1">
+              {% if not r.is_approved %}
+              <form action="/admin/review/approve/{{ r.id }}" method="POST" class="inline">
+                <button class="p-2 text-gray-600 hover:text-green-600 transition-colors" title="Publish/Approve Review" type="submit">
+                  <iconify-icon class="text-lg" icon="lucide:check-circle"></iconify-icon>
+                </button>
+              </form>
+              {% endif %}
+              <form action="/admin/review/delete/{{ r.id }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this review?');">
+                <button class="p-2 text-gray-600 hover:text-red-600 transition-colors" title="Delete Review" type="submit">
+                  <iconify-icon class="text-lg" icon="lucide:trash-2"></iconify-icon>
+                </button>
+              </form>
+            </div>
           </td>
         </tr>
         {% endfor %}

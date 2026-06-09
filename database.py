@@ -394,11 +394,18 @@ def update_settings(settings_dict):
 
 # ----------------- REVIEWS TABLE OPERATIONS -----------------
 
-def get_reviews():
-    """Fetches all client reviews from Supabase."""
-    url = f"{SUPABASE_URL}/rest/v1/reviews?select=*&order=id.desc"
+def get_reviews(only_approved=False):
+    """Fetches client reviews from Supabase."""
+    url = f"{SUPABASE_URL}/rest/v1/reviews"
+    params = {
+        "select": "*",
+        "order": "id.desc"
+    }
+    if only_approved:
+        params["is_approved"] = "eq.true"
+        
     try:
-        res = requests.get(url, headers=get_headers())
+        res = requests.get(url, headers=get_headers(), params=params)
         if res.status_code == 200:
             return [SupabaseRow(item) for item in res.json()]
         print(f"Supabase get_reviews error: {res.status_code} - {res.text}")
@@ -413,7 +420,8 @@ def insert_review(name, role_or_company, content, rating):
         "name": name,
         "role_or_company": role_or_company,
         "content": content,
-        "rating": int(rating)
+        "rating": int(rating),
+        "is_approved": False
     }
     try:
         res = requests.post(url, json=payload, headers=get_headers())
@@ -440,3 +448,21 @@ def delete_review(review_id):
         return False, f"Supabase error {res.status_code}: {res.text}"
     except Exception as e:
         return False, f"Connection error: {str(e)}"
+
+def approve_review(review_id):
+    """Approves a review by setting is_approved to True."""
+    url = f"{SUPABASE_URL}/rest/v1/reviews"
+    params = {
+        "id": f"eq.{review_id}"
+    }
+    payload = {
+        "is_approved": True
+    }
+    try:
+        res = requests.patch(url, json=payload, headers=get_headers(), params=params)
+        if res.status_code in (200, 201, 204):
+            return True, "Success"
+        return False, f"Supabase error {res.status_code}: {res.text}"
+    except Exception as e:
+        return False, f"Connection error: {str(e)}"
+

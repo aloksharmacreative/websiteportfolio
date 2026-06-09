@@ -155,14 +155,15 @@ CREATE TABLE IF NOT EXISTS reviews (
     role_or_company TEXT,
     content TEXT NOT NULL,
     rating INTEGER NOT NULL CHECK (rating >= 1 AND rating <= 5),
+    is_approved BOOLEAN DEFAULT FALSE,
     date_created TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Seed initial reviews
-INSERT INTO reviews (name, role_or_company, content, rating) VALUES
-('Sarah Jenkins', 'CEO at Brandly', 'Alok is an exceptional designer. He transformed our complex SaaS tool into an incredibly clean and intuitive interface. Highly recommended!', 5),
-('Marcus Chen', 'Product Owner at SocialEat', 'Working with Alok was a breeze. He met all timelines and brought a premium, state-of-the-art aesthetic to our mobile app.', 5),
-('Emma Watson', 'Marketing Lead at DecoSpace', 'Alok has a deep understanding of typography, spacing, and user psychology. Our conversions increased by 40% after the redesign.', 5)
+INSERT INTO reviews (name, role_or_company, content, rating, is_approved) VALUES
+('Sarah Jenkins', 'CEO at Brandly', 'Alok is an exceptional designer. He transformed our complex SaaS tool into an incredibly clean and intuitive interface. Highly recommended!', 5, true),
+('Marcus Chen', 'Product Owner at SocialEat', 'Working with Alok was a breeze. He met all timelines and brought a premium, state-of-the-art aesthetic to our mobile app.', 5, true),
+('Emma Watson', 'Marketing Lead at DecoSpace', 'Alok has a deep understanding of typography, spacing, and user psychology. Our conversions increased by 40% after the redesign.', 5, true)
 ON CONFLICT DO NOTHING;
 
 -- Enable Row Level Security for reviews table
@@ -194,4 +195,8 @@ CREATE POLICY "Public Update Access" ON storage.objects FOR UPDATE USING (bucket
 
 DROP POLICY IF EXISTS "Public Delete Access" ON storage.objects;
 CREATE POLICY "Public Delete Access" ON storage.objects FOR DELETE USING (bucket_id = 'portfolio');
+
+-- 12. Add is_approved column to reviews for manual approval
+ALTER TABLE reviews ADD COLUMN IF NOT EXISTS is_approved BOOLEAN DEFAULT FALSE;
+UPDATE reviews SET is_approved = true WHERE is_approved IS NULL;
 

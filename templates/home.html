@@ -5138,13 +5138,22 @@
 </header>
             {% with messages = get_flashed_messages(with_categories=true) %}
               {% if messages %}
-                <div class="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-full max-w-md px-4">
+                <div class="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-full max-w-md px-4 flex flex-col gap-3">
                   {% for category, msg in messages %}
-                    <div class="p-5 rounded-2xl border shadow-2xl text-sm font-bold {% if category == 'success' %}bg-green-50 text-green-800 border-green-200{% else %}bg-red-50 text-red-800 border-red-200{% endif %}" onclick="this.remove()">
+                    <div class="p-5 rounded-2xl border shadow-2xl text-sm font-bold flash-alert {% if category == 'success' %}bg-green-50 text-green-800 border-green-200{% else %}bg-red-50 text-red-800 border-red-200{% endif %}" onclick="this.remove()" style="transition: opacity 0.5s ease, transform 0.5s ease; opacity: 1; transform: translateY(0);">
                       {{ msg }}
                     </div>
                   {% endfor %}
                 </div>
+                <script>
+                  setTimeout(() => {
+                    document.querySelectorAll('.flash-alert').forEach(alert => {
+                      alert.style.opacity = '0';
+                      alert.style.transform = 'translateY(-10px)';
+                      setTimeout(() => alert.remove(), 500);
+                    });
+                  }, 2000);
+                </script>
               {% endif %}
             {% endwith %}
             
