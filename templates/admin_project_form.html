@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>{% if project %}Edit Project{% else %}New Project{% endif %} - Alok Sharma</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;family=Poppins:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<script src="https://code.iconify.design/iconify-icon/3.0.0/iconify-icon.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
+<style>
+      :root {
+        --primary-foreground: #FFFFFF;
+        --border: #EAEAEA;
+        --ring: #B30000;
+        --card: #FFFFFF;
+        --background: #FFFFFF;
+        --muted-foreground: #4A4A4A;
+        --muted: #F8F8F8;
+        --radius: 1.5rem;
+        --secondary: #121212;
+        --foreground: #121212;
+        --primary: #B30000;
+      }
+    </style>
+</head>
+<body class="bg-[#F4F4F6] text-gray-900 font-sans min-h-screen overflow-x-hidden">
+<header class="bg-white border-b border-gray-200 py-5 px-8 flex justify-between items-center sticky top-0 z-50">
+<div class="flex items-center gap-3">
+<a class="p-2 text-gray-500 hover:text-gray-800 transition-colors" href="/admin">
+<iconify-icon class="text-xl" icon="lucide:arrow-left"></iconify-icon>
+</a>
+<span class="text-xl font-bold tracking-tight text-gray-800">
+          {% if project %}Edit Project{% else %}Upload New Project{% endif %}
+        </span>
+</div>
+<a class="text-sm font-semibold hover:text-red-600 transition-colors" href="/admin">Cancel</a>
+</header>
+<main class="py-12 px-8 max-w-[900px] mx-auto">
+      <!-- Flash Messages -->
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <div class="mb-8 space-y-4">
+            {% for category, msg in messages %}
+              <div class="flash-alert p-5 rounded-2xl border text-sm font-bold shadow-sm cursor-pointer {% if category == 'success' %}bg-green-50 text-green-800 border-green-200{% elif category == 'warning' %}bg-yellow-50 text-yellow-800 border-yellow-200{% else %}bg-red-50 text-red-800 border-red-200{% endif %}" onclick="this.remove()">
+                {{ msg }}
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+
+<div class="bg-white rounded-3xl border border-gray-200 shadow-xl overflow-hidden p-8 md:p-12">
+<form class="space-y-8" enctype="multipart/form-data" method="POST">
+<!-- Title & Category -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="flex flex-col gap-2">
+<label class="text-sm font-bold text-gray-700">Project Title *</label>
+<input class="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-red-600 outline-none" name="title" placeholder="e.g. SocialEat Recipe App" required="" type="text" value="{{ project.title if project else '' }}"/>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-sm font-bold text-gray-700">Category *</label>
+<select class="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-red-600 outline-none cursor-pointer" name="category" required="">
+<option value="" {% if not project %}selected{% endif %} disabled>Select category</option>
+<option value="UI/UX Design" {% if project and project.category == 'UI/UX Design' %}selected{% endif %}>UI/UX Design</option>
+<option value="Web Design" {% if project and project.category == 'Web Design' %}selected{% endif %}>Web Design</option>
+<option value="Mobile Apps" {% if project and project.category == 'Mobile Apps' %}selected{% endif %}>Mobile Apps</option>
+<option value="Branding" {% if project and project.category == 'Branding' %}selected{% endif %}>Branding</option>
+</select>
+</div>
+</div>
+<!-- Cover Page Image Section -->
+<div class="flex flex-col gap-3">
+  <label class="text-sm font-bold text-gray-700">Cover Page Image (Grid Card Thumbnail) *</label>
+  <div class="p-6 bg-gray-50 border border-gray-200 rounded-3xl flex flex-col gap-4">
+    <p class="text-xs text-gray-500">
+      This image will be cropped to a 4:3 aspect ratio and used only on your portfolio grid cards. You can upload a new image specifically for the cover page, or select "Use as Cover" on any of your project showcase images below.
+    </p>
+
+    <div class="flex flex-col sm:flex-row gap-6 items-start sm:items-center">
+      <!-- Preview of current or selected cover image -->
+      <div id="cover_preview_container" class="relative w-48 aspect-[4/3] rounded-2xl border border-gray-200 overflow-hidden bg-white shadow-md flex items-center justify-center">
+        {% if project and project.image_url %}
+          <img id="cover_preview_image" class="w-full h-full object-cover" src="{{ project.image_url }}"/>
+        {% else %}
+          <div id="cover_placeholder" class="text-center p-4 text-gray-400 flex flex-col items-center gap-1">
+            <iconify-icon icon="lucide:image" class="text-3xl"></iconify-icon>
+            <span class="text-[10px] font-bold">No Cover Selected</span>
+          </div>
+          <img id="cover_preview_image" class="w-full h-full object-cover hidden" src=""/>
+        {% endif %}
+      </div>
+
+      <!-- Dedicated upload cover button -->
+      <div class="flex flex-col gap-2">
+        <button type="button" id="btn_upload_cover" class="px-6 py-3 bg-red-600 hover:bg-gray-900 text-white rounded-full font-bold text-sm transition-colors flex items-center gap-2 shadow-md">
+          <iconify-icon icon="lucide:image-plus" class="text-base"></iconify-icon>
+          Upload Cover Image
+        </button>
+        <span class="text-[10px] text-gray-400">Supported formats: JPG, PNG, WEBP. Locked to 4:3.</span>
+        <input type="file" id="cover_file_input" accept="image/*" class="hidden"/>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Project Media (Showcase Gallery) -->
+<div class="flex flex-col gap-3">
+  <label class="text-sm font-bold text-gray-700">Project Showcase Media *</label>
+  <div class="p-6 bg-gray-50 border border-gray-200 border-dashed rounded-3xl flex flex-col gap-6">
+    <p class="text-xs text-gray-500">
+      Upload images and videos showcasing your project in the case study gallery in their natural aspect ratios. You can select "Use as Cover" on any showcase image to define the card thumbnail.
+    </p>
+
+    <!-- Single Unified File Uploader -->
+    <div class="flex items-center justify-center py-8 border-2 border-gray-200 border-dashed rounded-2xl bg-white hover:bg-gray-50 transition-colors relative cursor-pointer group">
+      <input type="file" name="project_media" id="project_media" accept="image/*,video/*" class="absolute inset-0 opacity-0 cursor-pointer" multiple/>
+      <div class="text-center flex flex-col items-center gap-2">
+        <iconify-icon icon="lucide:upload-cloud" class="text-3xl text-gray-400 group-hover:text-red-600 transition-colors"></iconify-icon>
+        <span class="text-sm font-bold text-gray-700">Add Images &amp; Videos</span>
+        <span class="text-xs text-gray-400">Drag &amp; drop or click to upload multiple files</span>
+      </div>
+    </div>
+
+    <!-- Preview of files being uploaded -->
+    <div id="media_previews_container" class="hidden flex flex-col gap-4">
+      <span class="text-xs font-bold text-gray-700 flex items-center gap-1">
+        <iconify-icon icon="lucide:files" class="text-sm"></iconify-icon> Files selected for upload:
+      </span>
+      <div id="media_previews_list" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+        <!-- Javascript will inject thumbnails here -->
+      </div>
+    </div>
+
+    <!-- Hidden field to store cropped base64 image data -->
+    <input type="hidden" name="cropped_image_data" id="cropped_image_data"/>
+
+    <!-- Cropper Container (hidden by default) -->
+    <div id="cropper_container" class="hidden p-6 bg-white border border-gray-200 rounded-2xl flex flex-col gap-4">
+      <span class="text-xs font-bold text-gray-700 flex items-center gap-1">
+        <iconify-icon icon="lucide:crop" class="text-sm"></iconify-icon>
+        Interactive Image Cropper (4:3 Ratio for Cover Page only)
+      </span>
+      <div class="max-h-[400px] overflow-hidden rounded-xl border border-gray-200 bg-black flex justify-center items-center">
+        <img id="cropper_image" class="max-w-full max-h-[350px] block" src=""/>
+      </div>
+      <div class="flex flex-wrap gap-3">
+        <button type="button" id="btn_crop_save" class="px-5 py-2.5 bg-red-600 text-white rounded-full font-bold text-xs hover:bg-gray-900 transition-colors flex items-center gap-1.5 shadow-md">
+          <iconify-icon icon="lucide:check"></iconify-icon> Apply Crop for Cover
+        </button>
+        <button type="button" id="btn_crop_cancel" class="px-5 py-2.5 bg-gray-200 text-gray-700 rounded-full font-bold text-xs hover:bg-gray-300 transition-colors flex items-center gap-1.5">
+          <iconify-icon icon="lucide:x"></iconify-icon> Cancel
+        </button>
+      </div>
+    </div>
+
+    <!-- Existing Gallery manager (in Edit Mode) -->
+    {% if project %}
+    <div id="current_gallery_container" class="border-t border-gray-200 pt-6 flex flex-col gap-4">
+      <span class="text-xs font-bold text-gray-700 flex items-center gap-1">
+        <iconify-icon icon="lucide:images" class="text-sm"></iconify-icon> Current Saved Project Media:
+      </span>
+      
+      <!-- Track existing items -->
+      <input type="hidden" name="existing_gallery_urls" id="existing_gallery_urls"/>
+      <input type="hidden" name="current_cover_url" id="current_cover_url" value="{{ project.image_url if project.image_url else '' }}"/>
+
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4" id="current_gallery_list">
+        <!-- Render gallery showcase items (Cover is excluded to prevent duplication in gallery) -->
+        {% if project.media_gallery_list %}
+          {% for url in project.media_gallery_list %}
+          <div class="relative rounded-xl border border-gray-200 overflow-hidden bg-white shadow-sm flex flex-col group p-2" data-media-url="{{ url }}">
+            <button type="button" class="btn-delete-existing absolute top-3 right-3 w-6 h-6 bg-black/70 hover:bg-red-600 text-white rounded-full flex items-center justify-center transition-colors opacity-0 group-hover:opacity-100 z-10" title="Delete from Showcase">
+              <iconify-icon icon="lucide:trash-2" class="text-xs"></iconify-icon>
+            </button>
+            
+            {% if not url.lower().endswith(('.mp4', '.webm', '.ogg', '.mov')) %}
+            <button type="button" class="btn-use-cover-existing absolute bottom-3 left-3 px-2 py-1 bg-black/70 hover:bg-red-600 text-white text-[9px] font-bold rounded transition-colors opacity-0 group-hover:opacity-100 z-10">
+              Use as Cover
+            </button>
+            {% endif %}
+
+            <div class="aspect-[4/3] rounded-lg overflow-hidden bg-gray-50 border border-gray-100 flex items-center justify-center">
+              {% if url.lower().endswith(('.mp4', '.webm', '.ogg', '.mov')) %}
+                <iconify-icon icon="lucide:video" class="text-3xl text-gray-400"></iconify-icon>
+              {% else %}
+                <img class="w-full h-full object-cover" src="{{ url }}"/>
+              {% endif %}
+            </div>
+            <span class="text-[10px] text-gray-500 mt-2 truncate text-center">{{ url.split('/')[-1] }}</span>
+          </div>
+          {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+<!-- Links -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="flex flex-col gap-2">
+<label class="text-sm font-bold text-gray-700">Live Website Link (optional)</label>
+<input class="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-red-600 outline-none" name="live_url" placeholder="https://example.com" type="url" value="{{ project.live_url if project else '' }}"/>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-sm font-bold text-gray-700">Github Repository Link (optional)</label>
+<input class="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-red-600 outline-none" name="github_url" placeholder="https://github.com/..." type="url" value="{{ project.github_url if project else '' }}"/>
+</div>
+</div>
+<!-- Description -->
+<div class="flex flex-col gap-2">
+<label class="text-sm font-bold text-gray-700">Brief Description *</label>
+<input class="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-red-600 outline-none" name="description" placeholder="Short elevator pitch displayed on list views..." required="" type="text" value="{{ project.description if project else '' }}"/>
+</div>
+<!-- Case Study Details -->
+<div class="flex flex-col gap-2">
+<label class="text-sm font-bold text-gray-700">Case Study Details (Overview &amp; Implementation)</label>
+<textarea class="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-red-600 outline-none resize-none" name="details" placeholder="Write the full case study description here. You can use multiple paragraphs by pressing Enter." rows="10">{{ project.details if project else '' }}</textarea>
+</div>
+
+<!-- Case Study Extra Fields (for Work That Drives Results section) -->
+<div class="bg-gray-50 border border-gray-200 rounded-3xl p-6 md:p-8 space-y-6">
+  <div class="flex items-center gap-3">
+    <input type="checkbox" name="is_featured_case_study" id="is_featured_case_study" value="true" {% if project and project.is_featured_case_study %}checked{% endif %} class="w-5 h-5 accent-red-600 rounded cursor-pointer"/>
+    <label for="is_featured_case_study" class="text-sm font-bold text-gray-700 cursor-pointer">Feature this project in "Work That Drives Results" section</label>
+  </div>
+  
+  <div id="case_study_fields" class="space-y-6 {% if not (project and project.is_featured_case_study) %}hidden{% endif %}">
+    <p class="text-xs text-gray-500">
+      These fields are used to render this project as a premium Case Study in the "Work That Drives Results" section on the home page.
+    </p>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="flex flex-col gap-2">
+        <label class="text-xs font-bold text-gray-700">Challenge Statement</label>
+        <input class="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-red-600 outline-none text-sm" name="challenge" placeholder="e.g. Low user retention and confusing navigation paths." type="text" value="{{ project.challenge if project and project.challenge else '' }}"/>
+      </div>
+      <div class="flex flex-col gap-2">
+        <label class="text-xs font-bold text-gray-700">Solution Statement</label>
+        <input class="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-red-600 outline-none text-sm" name="solution" placeholder="e.g. Streamlined onboarding and gamified community features." type="text" value="{{ project.solution if project and project.solution else '' }}"/>
+      </div>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+      <div class="flex flex-col gap-2">
+        <label class="text-xs font-bold text-gray-700">Metric 1 Value</label>
+        <input class="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-red-600 outline-none text-sm" name="metric1_value" placeholder="e.g. +40%" type="text" value="{{ project.metric1_value if project and project.metric1_value else '' }}"/>
+      </div>
+      <div class="flex flex-col gap-2">
+        <label class="text-xs font-bold text-gray-700">Metric 1 Label</label>
+        <input class="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-red-600 outline-none text-sm" name="metric1_label" placeholder="e.g. User Engagement" type="text" value="{{ project.metric1_label if project and project.metric1_label else '' }}"/>
+      </div>
+      <div class="flex flex-col gap-2">
+        <label class="text-xs font-bold text-gray-700">Metric 2 Value</label>
+        <input class="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-red-600 outline-none text-sm" name="metric2_value" placeholder="e.g. +30%" type="text" value="{{ project.metric2_value if project and project.metric2_value else '' }}"/>
+      </div>
+      <div class="flex flex-col gap-2">
+        <label class="text-xs font-bold text-gray-700">Metric 2 Label</label>
+        <input class="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-red-600 outline-none text-sm" name="metric2_label" placeholder="e.g. Retention Growth" type="text" value="{{ project.metric2_label if project and project.metric2_label else '' }}"/>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Actions -->
+<div class="pt-6 border-t border-gray-200 flex justify-between items-center">
+<span class="text-xs text-gray-500">* Required field</span>
+<button class="px-10 py-4 bg-red-600 text-white rounded-full font-bold hover:bg-gray-900 transition-colors flex items-center gap-2 shadow-lg" type="submit">
+<iconify-icon icon="lucide:check-circle"></iconify-icon>
+              {% if project %}Save Changes{% else %}Upload Project{% endif %}
+            </button>
+</div>
+<script>
+  let cropper = null;
+  const projectMediaInput = document.getElementById('project_media');
+  const mediaPreviewsContainer = document.getElementById('media_previews_container');
+  const mediaPreviewsList = document.getElementById('media_previews_list');
+  const cropperContainer = document.getElementById('cropper_container');
+  const cropperImage = document.getElementById('cropper_image');
+  const croppedImageDataInput = document.getElementById('cropped_image_data');
+  const btnCropSave = document.getElementById('btn_crop_save');
+  const btnCropCancel = document.getElementById('btn_crop_cancel');
+
+  // Cover Image Buttons & Preview
+  const btnUploadCover = document.getElementById('btn_upload_cover');
+  const coverFileInput = document.getElementById('cover_file_input');
+  const coverPreviewContainer = document.getElementById('cover_preview_container');
+  const coverPreviewImage = document.getElementById('cover_preview_image');
+  const coverPlaceholder = document.getElementById('cover_placeholder');
+
+  // Trigger file input when upload cover is clicked
+  btnUploadCover.addEventListener('click', () => {
+    coverFileInput.click();
+  });
+
+  // Handle Cover File selection
+  coverFileInput.addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        openCropperWithUrl(evt.target.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+
+  // Track existing gallery URLs in edit mode
+  const existingGalleryUrlsInput = document.getElementById('existing_gallery_urls');
+  let existingUrls = [];
+  
+  if (existingGalleryUrlsInput) {
+    const rawVal = '{{ project.media_gallery|safe if project and project.media_gallery else "[]" }}';
+    try {
+      existingUrls = JSON.parse(rawVal || "[]");
+    } catch(e) {
+      existingUrls = [];
+    }
+    existingGalleryUrlsInput.value = JSON.stringify(existingUrls);
+  }
+
+  // Handle deletion of existing media items
+  document.querySelectorAll('.btn-delete-existing').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const container = this.closest('[data-media-url]');
+      if (container) {
+        const urlToDelete = container.getAttribute('data-media-url');
+        existingUrls = existingUrls.filter(u => u !== urlToDelete);
+        if (existingGalleryUrlsInput) {
+          existingGalleryUrlsInput.value = JSON.stringify(existingUrls);
+        }
+        container.remove();
+      }
+    });
+  });
+
+  // Use existing image as cover
+  document.querySelectorAll('.btn-use-cover-existing').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const container = this.closest('[data-media-url]');
+      if (container) {
+        const url = container.getAttribute('data-media-url');
+        openCropperWithUrl(url);
+      }
+    });
+  });
+
+  // Helper to open CropperJS with URL or DataUrl
+  function openCropperWithUrl(url) {
+    if (cropper) {
+      cropper.destroy();
+      cropper = null;
+    }
+    
+    // Set crossorigin to anonymous for remote files to prevent CORS canvas taint issues
+    cropperImage.removeAttribute('crossorigin');
+    if (url.startsWith('http') || url.startsWith('//')) {
+      cropperImage.setAttribute('crossorigin', 'anonymous');
+    }
+    
+    cropperImage.src = url;
+    cropperContainer.classList.remove('hidden');
+    
+    cropper = new Cropper(cropperImage, {
+      aspectRatio: 4 / 3,
+      viewMode: 1,
+      autoCropArea: 1,
+      responsive: true,
+      background: false,
+      checkOrientation: false // Avoid orientation check errors on some remote domains
+    });
+    
+    cropperContainer.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  // Keep track of selected files
+  let selectedFilesList = [];
+
+  projectMediaInput.addEventListener('change', function(e) {
+    const files = Array.from(e.target.files);
+    if (files.length > 0) {
+      selectedFilesList = files;
+      mediaPreviewsList.innerHTML = '';
+      mediaPreviewsContainer.classList.remove('hidden');
+      
+      files.forEach((file, index) => {
+        const isImage = file.type.startsWith('image/');
+        const reader = new FileReader();
+        
+        reader.onload = function(evt) {
+          const itemDiv = document.createElement('div');
+          itemDiv.className = 'relative rounded-xl border border-gray-200 overflow-hidden bg-white shadow-sm flex flex-col p-2 group';
+          
+          let previewHtml = '';
+          if (isImage) {
+            previewHtml = `
+              <div class="aspect-[4/3] rounded-lg overflow-hidden bg-gray-50 border border-gray-100">
+                <img class="w-full h-full object-cover" src="${evt.target.result}"/>
+              </div>
+              <button type="button" class="btn-set-cover mt-2 w-full py-1.5 bg-gray-100 hover:bg-red-600 hover:text-white rounded-lg text-[10px] font-bold transition-colors flex items-center justify-center gap-1 text-gray-700" data-file-index="${index}">
+                <iconify-icon icon="lucide:crop"></iconify-icon> Use as Cover
+              </button>
+            `;
+          } else {
+            previewHtml = `
+              <div class="aspect-[4/3] rounded-lg overflow-hidden bg-gray-50 border border-gray-100 flex flex-col items-center justify-center text-center p-2">
+                <iconify-icon icon="lucide:video" class="text-3xl text-gray-400 mb-1"></iconify-icon>
+                <span class="text-[9px] font-semibold text-gray-500 truncate max-w-full">${file.name}</span>
+              </div>
+              <span class="text-center text-[10px] text-gray-400 mt-2 font-bold py-1">Video File</span>
+            `;
+          }
+          
+          itemDiv.innerHTML = previewHtml;
+          mediaPreviewsList.appendChild(itemDiv);
+
+          // Hook Set as Cover click
+          const btnSetCover = itemDiv.querySelector('.btn-set-cover');
+          if (btnSetCover) {
+            btnSetCover.addEventListener('click', function() {
+              const fileIdx = parseInt(this.getAttribute('data-file-index'));
+              const selectedFile = selectedFilesList[fileIdx];
+              const fileReader = new FileReader();
+              
+              fileReader.onload = function(cropEvt) {
+                openCropperWithUrl(cropEvt.target.result);
+              };
+              fileReader.readAsDataURL(selectedFile);
+            });
+          }
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+  });
+
+  // Handle Crop Apply
+  btnCropSave.addEventListener('click', function() {
+    if (cropper) {
+      const canvas = cropper.getCroppedCanvas({
+        width: 800,
+        height: 600,
+        imageSmoothingEnabled: true,
+        imageSmoothingQuality: 'high'
+      });
+      
+      const croppedDataUrl = canvas.toDataURL('image/jpeg', 0.92);
+      croppedImageDataInput.value = croppedDataUrl;
+      
+      // Update Cover Preview
+      if (coverPreviewImage) {
+        coverPreviewImage.src = croppedDataUrl;
+        coverPreviewImage.classList.remove('hidden');
+      }
+      if (coverPlaceholder) {
+        coverPlaceholder.classList.add('hidden');
+      }
+      
+      cropperContainer.classList.add('hidden');
+      cropper.destroy();
+      cropper = null;
+    }
+  });
+
+  // Handle Crop Cancel
+  btnCropCancel.addEventListener('click', function() {
+    if (cropper) {
+      cropper.destroy();
+      cropper = null;
+    }
+    cropperContainer.classList.add('hidden');
+  });
+
+  // Form submit check
+  document.querySelector('form').addEventListener('submit', function(e) {
+    if (cropper) {
+      const canvas = cropper.getCroppedCanvas({
+        width: 800,
+        height: 600
+      });
+      croppedImageDataInput.value = canvas.toDataURL('image/jpeg', 0.92);
+    }
+  });
+
+  // Toggle case study extra fields visibility
+  const isCaseStudyCheckbox = document.getElementById('is_featured_case_study');
+  const caseStudyFieldsDiv = document.getElementById('case_study_fields');
+  if (isCaseStudyCheckbox && caseStudyFieldsDiv) {
+    isCaseStudyCheckbox.addEventListener('change', function() {
+      if (this.checked) {
+        caseStudyFieldsDiv.classList.remove('hidden');
+      } else {
+        caseStudyFieldsDiv.classList.add('hidden');
+      }
+    });
+  }
+
+  // Auto-hide alert notifications after 2 seconds (2000ms)
+  setTimeout(() => {
+    document.querySelectorAll('.flash-alert').forEach(alert => {
+      alert.style.transition = 'opacity 0.5s ease-out, transform 0.5s ease-out';
+      alert.style.opacity = '0';
+      alert.style.transform = 'translateY(-10px)';
+      setTimeout(() => alert.remove(), 500);
+    });
+  }, 2000);
+</script>
+</body>
+</html>

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Manage Site Content - Admin Workspace</title>
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;family=Poppins:wght@100..900&amp;display=swap" rel="stylesheet"/>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://code.iconify.design/iconify-icon/3.0.0/iconify-icon.min.js"></script>
+    <style>
+      :root {
+        --primary-foreground: #FFFFFF;
+        --border: #EAEAEA;
+        --ring: #B30000;
+        --card: #FFFFFF;
+        --background: #FFFFFF;
+        --muted-foreground: #4A4A4A;
+        --muted: #F8F8F8;
+        --radius: 1.5rem;
+        --secondary: #121212;
+        --foreground: #121212;
+        --primary: #B30000;
+      }
+    </style>
+</head>
+<body class="bg-[#F4F4F6] text-gray-900 font-sans min-h-screen overflow-x-hidden">
+    <header class="bg-white border-b border-gray-200 py-5 px-8 flex justify-between items-center sticky top-0 z-50">
+        <div class="flex items-center gap-3">
+            <a class="p-2 text-gray-500 hover:text-gray-800 transition-colors" href="/admin">
+                <iconify-icon class="text-xl" icon="lucide:arrow-left"></iconify-icon>
+            </a>
+            <span class="text-xl font-bold tracking-tight text-gray-800">
+                Manage Site Content (CMS)
+            </span>
+        </div>
+        <a class="text-sm font-semibold hover:text-red-600 transition-colors" href="/admin">Back to Dashboard</a>
+    </header>
+    
+    <main class="py-12 px-8 max-w-[1000px] mx-auto">
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="mb-8 space-y-4">
+                    {% for category, msg in messages %}
+                        <div class="flash-alert p-5 rounded-2xl border text-sm font-bold shadow-sm cursor-pointer {% if category == 'success' %}bg-green-50 text-green-800 border-green-200{% else %}bg-red-50 text-red-800 border-red-200{% endif %}" onclick="this.remove()">
+                            {{ msg }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST" class="space-y-10">
+            
+            <!-- Section 1: Statistics Counters -->
+            <div class="bg-white rounded-3xl border border-gray-200 shadow-xl p-8 md:p-12 space-y-6">
+                <h3 class="text-2xl font-bold text-gray-800 flex items-center gap-2 border-b border-gray-100 pb-4">
+                    <iconify-icon icon="lucide:bar-chart-3" class="text-red-600"></iconify-icon>
+                    Statistics & Highlights
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="flex flex-col gap-2">
+                        <label class="text-sm font-bold text-gray-700">Years of Experience *</label>
+                        <input class="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-red-600 outline-none" name="stats_experience" required type="text" placeholder="e.g. 5+" value="{{ settings.get('stats_experience', '') }}"/>
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <label class="text-sm font-bold text-gray-700">Projects Completed *</label>
+                        <input class="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-red-600 outline-none" name="stats_projects" required type="text" placeholder="e.g. 100+" value="{{ settings.get('stats_projects', '') }}"/>
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <label class="text-sm font-bold text-gray-700">Happy Clients / Ratings *</label>
+                        <input class="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-red-600 outline-none" name="stats_clients" required type="text" placeholder="e.g. 50+" value="{{ settings.get('stats_clients', '') }}"/>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 2: Social Media Profiles -->
+            <div class="bg-white rounded-3xl border border-gray-200 shadow-xl p-8 md:p-12 space-y-6">
+                <h3 class="text-2xl font-bold text-gray-800 flex items-center gap-2 border-b border-gray-100 pb-4">
+                    <iconify-icon icon="lucide:share-2" class="text-red-600"></iconify-icon>
+                    Social Media Profiles
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
+                    <div class="flex flex-col gap-2">
+                        <label class="text-sm font-bold text-gray-700 flex items-center gap-1.5">
+                            <iconify-icon icon="lucide:linkedin" class="text-gray-500"></iconify-icon>
+                            LinkedIn Profile URL
+                        </label>
+                        <input class="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-red-600 outline-none text-sm" name="social_linkedin" type="text" placeholder="#" value="{{ settings.get('social_linkedin', '') }}"/>
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <label class="text-sm font-bold text-gray-700 flex items-center gap-1.5">
+                            <iconify-icon icon="lucide:dribbble" class="text-gray-500"></iconify-icon>
+                            Dribbble Profile URL
+                        </label>
+                        <input class="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-red-600 outline-none text-sm" name="social_dribbble" type="text" placeholder="#" value="{{ settings.get('social_dribbble', '') }}"/>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="flex flex-col gap-2">
+                        <label class="text-sm font-bold text-gray-700 flex items-center gap-1.5">
+                            <iconify-icon icon="lucide:instagram" class="text-gray-500"></iconify-icon>
+                            Instagram Profile URL
+                        </label>
+                        <input class="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-red-600 outline-none text-sm" name="social_instagram" type="text" placeholder="#" value="{{ settings.get('social_instagram', '') }}"/>
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <label class="text-sm font-bold text-gray-700 flex items-center gap-1.5">
+                            <iconify-icon icon="lucide:twitter" class="text-gray-500"></iconify-icon>
+                            Twitter Profile URL
+                        </label>
+                        <input class="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-red-600 outline-none text-sm" name="social_twitter" type="text" placeholder="#" value="{{ settings.get('social_twitter', '') }}"/>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="pt-6 flex justify-between items-center bg-white border border-gray-200 p-8 rounded-3xl shadow-lg">
+                <span class="text-xs text-gray-500">* Required fields</span>
+                <div class="flex gap-4">
+                    <a href="/admin" class="px-8 py-4 bg-gray-200 text-gray-700 rounded-full font-bold hover:bg-gray-300 transition-colors text-sm">Cancel</a>
+                    <button class="px-10 py-4 bg-red-600 text-white rounded-full font-bold hover:bg-gray-900 transition-colors flex items-center gap-2 shadow-md text-sm" type="submit">
+                        <iconify-icon icon="lucide:save"></iconify-icon> Save Changes
+                    </button>
+                </div>
+            </div>
+        </form>
+    </main>
+    <script>
+      // Auto-hide alert notifications after 2 seconds (2000ms)
+      setTimeout(() => {
+        document.querySelectorAll('.flash-alert').forEach(alert => {
+          alert.style.transition = 'opacity 0.5s ease-out, transform 0.5s ease-out';
+          alert.style.opacity = '0';
+          alert.style.transform = 'translateY(-10px)';
+          setTimeout(() => alert.remove(), 500);
+        });
+      }, 2000);
+    </script>
+</body>
+</html>

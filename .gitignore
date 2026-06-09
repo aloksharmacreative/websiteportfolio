@@ -1,0 +1,15 @@
+.venv/
+.env
+__pycache__/
+*.pyc
+static/uploads/*
+!static/uploads/.gitkeep
+*.db
+line_numbers.txt
+search_results.txt
+mingit/
+find_git.py
+local_git_setup.py
+run_git.py
+test_integration.py
+test_reset.py

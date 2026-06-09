@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Workspace Dashboard - Alok Sharma</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;family=Poppins:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<script src="https://code.iconify.design/iconify-icon/3.0.0/iconify-icon.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+<style>
+      :root {
+        --primary-foreground: #FFFFFF;
+        --border: #EAEAEA;
+        --ring: #B30000;
+        --card: #FFFFFF;
+        --background: #FFFFFF;
+        --muted-foreground: #4A4A4A;
+        --muted: #F8F8F8;
+        --radius: 1.5rem;
+        --secondary: #121212;
+        --foreground: #121212;
+        --primary: #B30000;
+      }
+    </style>
+</head>
+<body class="bg-[#F4F4F6] text-gray-900 font-sans min-h-screen overflow-x-hidden">
+<!-- Header/Nav -->
+<header class="bg-white border-b border-gray-200 py-5 px-8 flex justify-between items-center sticky top-0 z-50">
+<div class="flex items-center gap-3">
+<span class="text-xl font-bold tracking-tight text-gray-800">Portfolio <span class="text-red-600">Workspace</span></span>
+<span class="px-3 py-1 bg-red-100 text-red-700 text-xs font-bold rounded-full">Admin Mode</span>
+</div>
+<div class="flex items-center gap-4">
+<a class="text-sm font-semibold hover:text-red-600 transition-colors flex items-center gap-1" href="/admin/settings">
+  <iconify-icon icon="lucide:settings" class="text-base"></iconify-icon>
+  Manage Site Content
+</a>
+<span class="text-gray-300">|</span>
+<a class="text-sm font-semibold hover:text-red-600 transition-colors" href="/">View Live Site</a>
+<a class="px-4 py-2 border border-gray-300 rounded-full text-sm font-semibold hover:bg-gray-50 transition-colors" href="/admin/logout">Logout</a>
+</div>
+</header>
+<main class="py-10 px-8 max-w-[1600px] mx-auto space-y-12">
+      <!-- Flash Messages -->
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <div class="space-y-4 max-w-xl">
+            {% for category, msg in messages %}
+              <div class="flash-alert p-5 rounded-2xl border text-sm font-medium cursor-pointer {% if category == 'success' %}bg-green-50 text-green-800 border-green-200{% elif category == 'warning' %}bg-yellow-50 text-yellow-800 border-yellow-200{% else %}bg-red-50 text-red-800 border-red-200{% endif %}" onclick="this.remove()">
+                {{ msg }}
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+
+      <!-- Stats Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+<div class="bg-white p-6 rounded-3xl border border-gray-200 shadow-sm flex items-center justify-between">
+<div>
+<p class="text-sm font-bold text-gray-500 uppercase tracking-wider">Total Projects</p>
+<h3 class="text-3xl font-black mt-2 text-gray-800">{{ projects|length }}</h3>
+</div>
+<div class="w-12 h-12 rounded-full bg-red-50 text-red-600 flex items-center justify-center text-xl">
+<iconify-icon icon="lucide:folder-heart"></iconify-icon>
+</div>
+</div>
+<div class="bg-white p-6 rounded-3xl border border-gray-200 shadow-sm flex items-center justify-between">
+<div>
+<p class="text-sm font-bold text-gray-500 uppercase tracking-wider">Discovery Calls</p>
+<h3 class="text-3xl font-black mt-2 text-gray-800">{{ bookings|length }}</h3>
+</div>
+<div class="w-12 h-12 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-xl">
+<iconify-icon icon="lucide:calendar-clock"></iconify-icon>
+</div>
+</div>
+<div class="bg-white p-6 rounded-3xl border border-gray-200 shadow-sm flex items-center justify-between">
+<div>
+<p class="text-sm font-bold text-gray-500 uppercase tracking-wider">Project Inquiries</p>
+<h3 class="text-3xl font-black mt-2 text-gray-800">{{ hires|length }}</h3>
+</div>
+<div class="w-12 h-12 rounded-full bg-green-50 text-green-600 flex items-center justify-center text-xl">
+<iconify-icon icon="lucide:briefcase"></iconify-icon>
+</div>
+</div>
+<div class="bg-white p-6 rounded-3xl border border-gray-200 shadow-sm flex items-center justify-between">
+<div>
+<p class="text-sm font-bold text-gray-500 uppercase tracking-wider">Direct Messages</p>
+<h3 class="text-3xl font-black mt-2 text-gray-800">{{ messages|length }}</h3>
+</div>
+<div class="w-12 h-12 rounded-full bg-purple-50 text-purple-600 flex items-center justify-center text-xl">
+<iconify-icon icon="lucide:mail"></iconify-icon>
+</div>
+</div>
+</div>
+<!-- Projects Section -->
+<section class="bg-white rounded-3xl border border-gray-200 shadow-sm overflow-hidden">
+<div class="p-8 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
+<div>
+<h2 class="text-2xl font-bold text-gray-800">Portfolio Projects</h2>
+<p class="text-sm text-gray-500 mt-1">Add, edit, or delete items on your main portfolio grids.</p>
+</div>
+<a class="px-6 py-3 bg-red-600 text-white rounded-full text-sm font-bold hover:bg-red-700 transition-colors flex items-center gap-2" href="/admin/project/new">
+<iconify-icon icon="lucide:plus"></iconify-icon>
+            Add New Project
+          </a>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-gray-50 border-b border-gray-200 text-xs font-bold uppercase text-gray-500">
+<th class="py-4 px-6 w-12 text-center">Order</th>
+<th class="py-4 px-6">Image</th>
+<th class="py-4 px-6">Project Title</th>
+<th class="py-4 px-6">Category</th>
+<th class="py-4 px-6">Description</th>
+<th class="py-4 px-6 text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-gray-100 text-sm" id="projects_table_body">
+              {% for p in projects %}
+              <tr class="hover:bg-gray-50/50" data-id="{{ p.id }}">
+<td class="py-4 px-6 cursor-grab drag-handle text-gray-400 hover:text-red-600 transition-colors text-center">
+  <iconify-icon icon="lucide:grip-vertical" class="text-lg"></iconify-icon>
+</td>
+<td class="py-4 px-6">
+                  {% if p.image_url %}
+                  <img class="w-16 h-12 object-cover rounded-xl border border-gray-200" src="{{ p.image_url }}"/>
+                  {% else %}
+                  <div class="w-16 h-12 bg-gray-100 rounded-xl flex items-center justify-center text-gray-400">No Image</div>
+                  {% endif %}
+                </td>
+<td class="py-4 px-6 font-bold text-gray-800">{{ p.title }}</td>
+<td class="py-4 px-6">
+<span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-xs font-semibold">{{ p.category }}</span>
+</td>
+<td class="py-4 px-6 text-gray-500 max-w-xs truncate">{{ p.description }}</td>
+<td class="py-4 px-6 text-right">
+<div class="flex items-center justify-end gap-3">
+<a class="p-2 text-gray-600 hover:text-red-600 transition-colors" href="/admin/project/edit/{{ p.id }}" title="Edit">
+<iconify-icon class="text-lg" icon="lucide:edit-3"></iconify-icon>
+</a>
+<form action="/admin/project/delete/{{ p.id }}" class="inline" method="POST" onsubmit="return confirm('Are you sure you want to delete this project?');">
+<button class="p-2 text-gray-600 hover:text-red-600 transition-colors" title="Delete" type="submit">
+<iconify-icon class="text-lg" icon="lucide:trash-2"></iconify-icon>
+</button>
+</form>
+</div>
+</td>
+</tr>
+              {% endfor %}
+              {% if not projects %}
+              <tr>
+<td class="py-8 text-center text-gray-400" colspan="6">No projects uploaded yet.</td>
+</tr>
+              {% endif %}
+            </tbody>
+</table>
+</div>
+</section>
+<div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
+<!-- Bookings Section -->
+<section class="bg-white rounded-3xl border border-gray-200 shadow-sm overflow-hidden flex flex-col">
+<div class="p-6 border-b border-gray-100 bg-gray-50/50">
+<h2 class="text-xl font-bold text-gray-800">Discovery Call Bookings</h2>
+<p class="text-xs text-gray-500 mt-1">Active scheduling logs for introductory consultation calls.</p>
+</div>
+<div class="overflow-x-auto flex-1 max-h-[400px]">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-gray-50 border-b border-gray-200 text-xs font-bold uppercase text-gray-500">
+<th class="py-3 px-6">Client Name</th>
+<th class="py-3 px-6">Email</th>
+<th class="py-3 px-6">Booking Details</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-gray-100 text-xs">
+                {% for b in bookings %}
+                <tr class="hover:bg-gray-50/50">
+<td class="py-3 px-6 font-bold text-gray-800">{{ b.name }}</td>
+<td class="py-3 px-6 text-gray-500">{{ b.email }}</td>
+<td class="py-3 px-6">
+<span class="px-2 py-1 bg-blue-50 text-blue-700 rounded-lg font-bold">{{ b.booking_date }}</span>
+<span class="ml-1 font-bold text-gray-700">{{ b.booking_time }}</span>
+</td>
+</tr>
+                {% endfor %}
+                {% if not bookings %}
+                <tr>
+<td class="py-8 text-center text-gray-400" colspan="3">No discovery call bookings yet.</td>
+</tr>
+                {% endif %}
+              </tbody>
+</table>
+</div>
+</section>
+<!-- Project Inquiries Section -->
+<section class="bg-white rounded-3xl border border-gray-200 shadow-sm overflow-hidden flex flex-col">
+<div class="p-6 border-b border-gray-100 bg-gray-50/50">
+<h2 class="text-xl font-bold text-gray-800">Project Inquiries (Hire Requests)</h2>
+<p class="text-xs text-gray-500 mt-1">Clients interested in hiring you for custom project specs.</p>
+</div>
+<div class="overflow-x-auto flex-1 max-h-[400px]">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-gray-50 border-b border-gray-200 text-xs font-bold uppercase text-gray-500">
+<th class="py-3 px-6">Client Info</th>
+<th class="py-3 px-6">Request details</th>
+<th class="py-3 px-6">Budget &amp; Timeline</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-gray-100 text-xs">
+                {% for h in hires %}
+                <tr class="hover:bg-gray-50/50">
+<td class="py-3 px-6">
+<p class="font-bold text-gray-800">{{ h.name }}</p>
+<p class="text-gray-500 mt-0.5">{{ h.email }}</p>
+<p class="text-gray-400 mt-0.5">{{ h.company }} ({{ h.website }})</p>
+</td>
+<td class="py-3 px-6 max-w-xs">
+<p class="font-bold text-gray-700 mb-1">Services: {{ h.services }}</p>
+<p class="text-gray-500 leading-relaxed">{{ h.description }}</p>
+</td>
+<td class="py-3 px-6">
+<p><span class="font-bold text-gray-500 uppercase">Budget:</span> <span class="font-black text-green-700">{{ h.budget }}</span></p>
+<p class="mt-1"><span class="font-bold text-gray-500 uppercase">Timeline:</span> <span class="font-bold text-gray-700">{{ h.timeline }}</span></p>
+</td>
+</tr>
+                {% endfor %}
+                {% if not hires %}
+                <tr>
+<td class="py-8 text-center text-gray-400" colspan="3">No project inquiries yet.</td>
+</tr>
+                {% endif %}
+              </tbody>
+</table>
+</div>
+</section>
+</div>
+<!-- Messages Section -->
+<section class="bg-white rounded-3xl border border-gray-200 shadow-sm overflow-hidden">
+<div class="p-6 border-b border-gray-100 bg-gray-50/50">
+<h2 class="text-xl font-bold text-gray-800">General Contact Messages</h2>
+<p class="text-xs text-gray-500 mt-1">General inquiries and greeting submissions from the email contact form.</p>
+</div>
+<div class="overflow-x-auto max-h-[400px]">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-gray-50 border-b border-gray-200 text-xs font-bold uppercase text-gray-500">
+<th class="py-3 px-6">Sender Name</th>
+<th class="py-3 px-6">Email Address</th>
+<th class="py-3 px-6">Subject</th>
+<th class="py-3 px-6">Message Content</th>
+<th class="py-3 px-6">Date Sent</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-gray-100 text-xs">
+              {% for m in messages %}
+              <tr class="hover:bg-gray-50/50">
+<td class="py-3 px-6 font-bold text-gray-800">{{ m.first_name }} {{ m.last_name }}</td>
+<td class="py-3 px-6 text-gray-500">{{ m.email }}</td>
+<td class="py-3 px-6 font-bold text-gray-700">{{ m.subject }}</td>
+<td class="py-3 px-6 text-gray-500 max-w-sm whitespace-pre-wrap leading-relaxed">{{ m.message }}</td>
+<td class="py-3 px-6 text-gray-400">{{ m.date_created.split(' ')[0] }}</td>
+</tr>
+              {% endfor %}
+              {% if not messages %}
+              <tr>
+<td class="py-8 text-center text-gray-400" colspan="5">No messages received yet.</td>
+</tr>
+              {% endif %}
+            </tbody>
+</table>
+</div>
+</section>
+
+<!-- Client Reviews Management Section -->
+<section class="bg-white rounded-3xl border border-gray-200 shadow-sm overflow-hidden mt-8">
+  <div class="p-6 border-b border-gray-100 bg-gray-50/50 flex justify-between items-center">
+    <div>
+      <h2 class="text-xl font-bold text-gray-800">Client Reviews</h2>
+      <p class="text-xs text-gray-500 mt-1">Manage feedback and ratings submitted by clients on the homepage.</p>
+    </div>
+    <span class="px-3 py-1 bg-red-100 text-red-700 text-xs font-bold rounded-full">{{ reviews|length }} Submitted</span>
+  </div>
+  <div class="overflow-x-auto max-h-[400px]">
+    <table class="w-full text-left border-collapse">
+      <thead>
+        <tr class="bg-gray-50 border-b border-gray-200 text-xs font-bold uppercase text-gray-500">
+          <th class="py-3 px-6">Client Name</th>
+          <th class="py-3 px-6">Role / Company</th>
+          <th class="py-3 px-6">Rating</th>
+          <th class="py-3 px-6">Review Content</th>
+          <th class="py-3 px-6 text-right">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-100 text-xs">
+        {% for r in reviews %}
+        <tr class="hover:bg-gray-50/50">
+          <td class="py-3 px-6 font-bold text-gray-800">{{ r.name }}</td>
+          <td class="py-3 px-6 text-gray-500">{{ r.role_or_company or 'N/A' }}</td>
+          <td class="py-3 px-6">
+            <div class="flex items-center gap-0.5 text-amber-500">
+              {% for i in range(r.rating) %}
+              <iconify-icon icon="clarity:star-solid"></iconify-icon>
+              {% endfor %}
+              {% for i in range(5 - r.rating) %}
+              <iconify-icon icon="clarity:star-line" class="text-gray-300"></iconify-icon>
+              {% endfor %}
+            </div>
+          </td>
+          <td class="py-3 px-6 text-gray-500 max-w-md whitespace-pre-wrap leading-relaxed">{{ r.content }}</td>
+          <td class="py-3 px-6 text-right">
+            <form action="/admin/review/delete/{{ r.id }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this review?');">
+              <button class="p-2 text-gray-600 hover:text-red-600 transition-colors" title="Delete Review" type="submit">
+                <iconify-icon class="text-lg" icon="lucide:trash-2"></iconify-icon>
+              </button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+        {% if not reviews %}
+        <tr>
+          <td class="py-8 text-center text-gray-400" colspan="5">No reviews received yet.</td>
+        </tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+</section>
+</main>
+<script>
+  // Auto-hide alert notifications after 2 seconds (2000ms)
+  setTimeout(() => {
+    document.querySelectorAll('.flash-alert').forEach(alert => {
+      alert.style.transition = 'opacity 0.5s ease-out, transform 0.5s ease-out';
+      alert.style.opacity = '0';
+      alert.style.transform = 'translateY(-10px)';
+      setTimeout(() => alert.remove(), 500);
+    });
+  }, 2000);
+
+  // Initialize SortableJS on the projects table body
+  const projectsTableBody = document.getElementById('projects_table_body');
+  if (projectsTableBody) {
+    Sortable.create(projectsTableBody, {
+      handle: '.drag-handle',
+      animation: 150,
+      ghostClass: 'bg-red-50', // Highlight the dragged row ghost state
+      onEnd: function() {
+        // Collect all project IDs in their new order
+        const projectIds = Array.from(projectsTableBody.querySelectorAll('tr[data-id]'))
+                               .map(row => parseInt(row.getAttribute('data-id')));
+                               
+        if (projectIds.length === 0) return;
+        
+        // Show a loading/saving toast message
+        showToast("Saving project order...", "info");
+        
+        // Send the order to the backend via AJAX
+        fetch('/admin/projects/reorder', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ project_ids: projectIds })
+        })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            showToast(data.message, "success");
+          } else {
+            showToast("Failed to save order: " + data.message, "error");
+          }
+        })
+        .catch(err => {
+          showToast("Network error saving order: " + err, "error");
+        });
+      }
+    });
+  }
+
+  // Toast notification helper
+  function showToast(message, type) {
+    // Remove any existing drag toast
+    const existing = document.getElementById('drag_toast');
+    if (existing) existing.remove();
+    
+    const toast = document.createElement('div');
+    toast.id = 'drag_toast';
+    toast.className = 'fixed bottom-5 right-5 p-5 rounded-2xl border text-sm font-bold shadow-lg z-50 transition-all duration-300 transform translate-y-0';
+    
+    if (type === 'success') {
+      toast.className += ' bg-green-50 text-green-800 border-green-200';
+    } else if (type === 'error') {
+      toast.className += ' bg-red-50 text-red-800 border-red-200';
+    } else {
+      toast.className += ' bg-blue-50 text-blue-800 border-blue-200';
+    }
+    
+    toast.innerHTML = message;
+    document.body.appendChild(toast);
+    
+    // Automatically fade out after 2 seconds (if success or error)
+    if (type !== 'info') {
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(10px)';
+        setTimeout(() => toast.remove(), 300);
+      }, 2000);
+    }
+  }
+</script>
+</body>
+</html>

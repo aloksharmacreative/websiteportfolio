@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>{{ project.title }} - Alok Sharma</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;family=Poppins:wght@100..900&amp;family=Fira+Code:wght@300..700&amp;family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<script src="https://code.iconify.design/iconify-icon/3.0.0/iconify-icon.min.js"></script>
+<style type="text/tailwindcss">
+      @import "tailwindcss";
+      @theme inline {
+        --color-background: var(--background);
+        --color-foreground: var(--foreground);
+        --color-primary: var(--primary);
+        --color-primary-foreground: var(--primary-foreground);
+        --color-secondary: var(--secondary);
+        --color-secondary-foreground: var(--secondary-foreground);
+        --color-tertiary: var(--tertiary);
+        --color-muted: var(--muted);
+        --color-muted-foreground: var(--muted-foreground);
+        --color-accent: var(--accent);
+        --color-destructive: var(--destructive);
+        --color-card: var(--card);
+        --color-card-foreground: var(--card-foreground);
+        --color-border: var(--border);
+        --color-input: var(--input);
+        --color-ring: var(--ring);
+        --radius-sm: calc(var(--radius) - 4px);
+        --radius-md: calc(var(--radius) - 2px);
+        --radius-lg: var(--radius);
+        --font-family-sans: var(--font-sans);
+        --font-family-heading: var(--font-heading);
+      }
+      :root { --primary-foreground: #FFFFFF;
+        --border: #EAEAEA;
+        --ring: #B30000;
+        --card: #FFFFFF;
+        --background: #FFFFFF;
+        --muted-foreground: #4A4A4A;
+        --tertiary: #4A4A4A;
+        --muted: #F8F8F8;
+        --radius: 1.5rem;
+        --accent: #F8F8F8;
+        --font-heading: 'Playfair Display', serif;
+        --secondary-foreground: #FFFFFF;
+        --input: #EAEAEA;
+        --font-sans: 'Poppins', sans-serif;
+        --secondary: #121212;
+        --destructive: #B30000;
+        --card-foreground: #121212;
+        --foreground: #121212;
+        --primary: #B30000; }
+    </style>
+</head>
+<body class="overflow-x-hidden">
+<div class="min-h-screen w-full bg-background text-foreground flex flex-col relative font-sans">
+<!-- Navbar -->
+<header class="w-full py-6 px-8 md:px-16 flex justify-between items-center bg-background/80 backdrop-blur-md sticky top-0 z-50 border-b border-border/50">
+<a class="text-2xl font-heading font-bold tracking-tight" href="/">
+      Alok<span class="text-primary">Sharma</span>
+</a>
+<nav class="hidden lg:flex gap-8 text-sm font-medium text-muted-foreground">
+<a class="hover:text-foreground transition-colors" href="/#work">Work</a>
+<a class="hover:text-foreground transition-colors" href="/#services">Services</a>
+<a class="hover:text-foreground transition-colors" href="/#about">About</a>
+<a class="hover:text-foreground transition-colors" href="/#contact">Contact</a>
+</nav>
+<a class="hidden md:inline-flex items-center justify-center px-6 py-3 bg-foreground text-background rounded-full text-sm font-medium hover:bg-primary hover:text-primary-foreground transition-colors" href="/#contact">
+      Hire Me
+    </a>
+<button class="lg:hidden text-2xl">
+<iconify-icon icon="lucide:menu"></iconify-icon>
+</button>
+</header>
+<!-- Main Content -->
+<main class="flex-1 w-full py-20 px-8 md:px-16 max-w-[1200px] mx-auto">
+<!-- Breadcrumb -->
+<div class="flex items-center gap-2 text-sm text-muted-foreground mb-8">
+<a class="hover:text-foreground transition-colors" href="/">Home</a>
+<iconify-icon class="text-xs" icon="lucide:chevron-right"></iconify-icon>
+<a class="hover:text-foreground transition-colors" href="/projects">Projects</a>
+<iconify-icon class="text-xs" icon="lucide:chevron-right"></iconify-icon>
+<span class="text-foreground font-medium truncate">{{ project.title }}</span>
+</div>
+<!-- Title & Category Header -->
+<div class="mb-12">
+<span class="text-primary font-bold tracking-widest uppercase text-sm mb-4 block">{{ project.category }}</span>
+<h1 class="text-5xl md:text-7xl font-heading font-bold mb-6 text-foreground leading-tight">
+        {{ project.title }}
+      </h1>
+<p class="text-xl text-muted-foreground leading-relaxed max-w-3xl">
+        {{ project.description }}
+      </p>
+</div>
+<!-- Project Banner Image -->
+    <!-- Project Media Gallery Showcase -->
+    {% if project.media_gallery_list %}
+      <div class="flex flex-col gap-10 mb-16">
+        {% for media_url in project.media_gallery_list %}
+          {% if media_url and (media_url.lower().endswith('.mp4') or media_url.lower().endswith('.webm') or media_url.lower().endswith('.ogg') or media_url.lower().endswith('.mov')) %}
+            <div class="w-full rounded-3xl overflow-hidden shadow-2xl border border-border bg-black relative">
+              <video class="w-full h-auto block object-contain" controls autoplay muted playsinline loop>
+                <source src="{{ media_url }}" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+            </div>
+          {% else %}
+            <div class="w-full rounded-3xl overflow-hidden shadow-2xl border border-border bg-white">
+              <img alt="{{ project.title }}" class="w-full h-auto block" src="{{ media_url }}"/>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    {% elif project.video_url %}
+      <!-- Fallback for older projects with single video -->
+      {% set video_type, video_src = get_video_embed(project.video_url) %}
+      <div class="w-full rounded-3xl overflow-hidden shadow-2xl mb-16 border border-border bg-black aspect-[16/9] relative">
+        {% if video_type == 'direct' %}
+          <video class="w-full h-full object-contain" controls autoplay muted playsinline loop>
+            <source src="{{ video_src }}" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        {% elif video_type == 'youtube' or video_type == 'vimeo' %}
+          <iframe class="w-full h-full" src="{{ video_src }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        {% else %}
+          <div class="w-full h-full flex flex-col items-center justify-center p-8 bg-gray-900 text-white">
+            <iconify-icon class="text-5xl text-primary mb-4" icon="lucide:video"></iconify-icon>
+            <p class="text-lg font-bold mb-2">Video Project Link</p>
+            <a class="px-6 py-3 bg-primary text-white rounded-full font-bold hover:bg-white hover:text-black transition-colors" href="{{ video_src }}" target="_blank">View Video Project</a>
+          </div>
+        {% endif %}
+      </div>
+    {% elif project.image_url %}
+      <!-- Fallback for older projects with single image -->
+      <div class="w-full rounded-3xl overflow-hidden shadow-2xl mb-16 border border-border bg-white">
+        <img alt="{{ project.title }}" class="w-full h-auto block" src="{{ project.original_image_url or project.image_url }}"/>
+      </div>
+    {% endif %}
+
+    <!-- Case Study Grid layout -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-16 mb-24">
+<!-- Sider: Metadata & Call to Action -->
+<div class="lg:col-span-1 flex flex-col gap-8">
+<div class="bg-muted border border-border p-8 rounded-3xl">
+<h4 class="font-bold text-lg mb-6 border-b border-border/50 pb-3">Project Specs</h4>
+<div class="flex flex-col gap-4 text-sm">
+<div>
+<p class="text-muted-foreground font-medium uppercase tracking-wider text-xs mb-1">Role / Services</p>
+<p class="font-bold text-foreground">{{ project.category }}</p>
+</div>
+<div>
+<p class="text-muted-foreground font-medium uppercase tracking-wider text-xs mb-1">Date Created</p>
+<p class="font-bold text-foreground">{{ project.date_created.split(' ')[0] }}</p>
+</div>
+            {% if project.live_url and project.live_url != '#' %}
+            <div>
+<p class="text-muted-foreground font-medium uppercase tracking-wider text-xs mb-1">Live Website</p>
+<a class="font-bold text-primary hover:underline flex items-center gap-1" href="{{ project.live_url }}" target="_blank">
+                Launch Site
+                <iconify-icon class="text-xs" icon="lucide:external-link"></iconify-icon>
+</a>
+</div>
+            {% endif %}
+            {% if project.github_url and project.github_url != '#' %}
+            <div>
+<p class="text-muted-foreground font-medium uppercase tracking-wider text-xs mb-1">Github Source</p>
+<a class="font-bold text-foreground hover:underline flex items-center gap-1" href="{{ project.github_url }}" target="_blank">
+                View Repository
+                <iconify-icon class="text-xs" icon="lucide:github"></iconify-icon>
+</a>
+</div>
+            {% endif %}
+          </div>
+</div>
+<div class="bg-primary/5 border border-primary/20 p-8 rounded-3xl flex flex-col gap-6">
+<h4 class="font-heading font-bold text-2xl text-foreground">Have a similar project in mind?</h4>
+<p class="text-muted-foreground text-sm leading-relaxed">Let's discuss how we can build a premium digital product that drives real business metrics.</p>
+<a class="w-full py-4 bg-primary text-primary-foreground font-bold text-center rounded-full hover:bg-foreground transition-colors flex items-center justify-center gap-2" href="/hire">
+            Hire Me
+            <iconify-icon icon="lucide:arrow-right"></iconify-icon>
+</a>
+</div>
+</div>
+<!-- Main Study Details -->
+<div class="lg:col-span-2">
+<h3 class="text-3xl font-heading font-bold text-foreground mb-6">Overview &amp; Implementation</h3>
+<div class="text-lg text-muted-foreground leading-relaxed space-y-6">
+<!-- Render details with line breaks -->
+          {% for paragraph in project.details.split('\n') %}
+            {% if paragraph.strip() %}
+              <p>{{ paragraph.strip() }}</p>
+            {% endif %}
+          {% endfor %}
+        </div>
+</div>
+</div>
+<!-- Recommendations -->
+<div class="border-t border-border pt-16">
+<h3 class="text-3xl font-heading font-bold text-foreground mb-12">More Case Studies</h3>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {% for p in other_projects %}
+        <div class="group flex flex-col gap-4 cursor-pointer" onclick="location.href='/project/{{ p.id }}'">
+<div class="relative overflow-hidden rounded-2xl aspect-[4/3] bg-muted border border-border">
+<img alt="{{ p.title }}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" src="{{ p.image_url }}"/>
+{% if p.video_url %}
+<div class="absolute top-4 right-4 z-10 w-8 h-8 bg-black/60 backdrop-blur-md text-white rounded-full flex items-center justify-center border border-white/20 shadow-lg">
+  <iconify-icon class="text-sm" icon="lucide:play"></iconify-icon>
+</div>
+{% endif %}
+<div class="absolute inset-0 bg-secondary/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+<span class="w-12 h-12 bg-primary text-primary-foreground rounded-full flex items-center justify-center transform scale-0 group-hover:scale-100 transition-transform duration-500 delay-100">
+<iconify-icon class="text-xl" icon="lucide:arrow-up-right"></iconify-icon>
+</span>
+</div>
+</div>
+<div>
+<span class="text-primary text-xs font-medium tracking-wider uppercase mb-1 block">{{ p.category }}</span>
+<h4 class="text-xl font-heading font-bold mb-1 text-foreground group-hover:text-primary transition-colors truncate">{{ p.title }}</h4>
+</div>
+</div>
+        {% endfor %}
+      </div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full bg-secondary text-secondary-foreground py-16 px-8 md:px-16 mt-auto">
+<div class="max-w-[1400px] mx-auto">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+<div class="md:col-span-2">
+<a class="text-3xl font-heading font-bold tracking-tight mb-6" href="/">
+            Alok<span class="text-primary">Sharma</span>
+</a>
+<p class="text-secondary-foreground/60 max-w-sm mb-8">
+            Elevating brands through strategic UI/UX and visually compelling graphic design.
+          </p>
+<div class="flex items-center gap-4 text-secondary-foreground/60">
+<iconify-icon class="text-xl" icon="lucide:map-pin"></iconify-icon>
+<span>Delhi, India</span>
+</div>
+</div>
+<div>
+<h4 class="font-bold mb-6 text-lg">Navigation</h4>
+<ul class="space-y-4 text-secondary-foreground/60">
+<li><a class="hover:text-primary transition-colors" href="/">Selected Work</a></li>
+<li><a class="hover:text-primary transition-colors" href="/#services">Services</a></li>
+<li><a class="hover:text-primary transition-colors" href="/#about">About Me</a></li>
+<li><a class="hover:text-primary transition-colors" href="/#contact">Contact</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-bold mb-6 text-lg">Socials</h4>
+<ul class="space-y-4 text-secondary-foreground/60">
+<li><a class="hover:text-primary transition-colors flex items-center gap-2" href="{{ settings.get('social_linkedin', '#') }}" target="_blank" rel="noopener noreferrer"><iconify-icon icon="lucide:linkedin"></iconify-icon> LinkedIn</a></li>
+<li><a class="hover:text-primary transition-colors flex items-center gap-2" href="{{ settings.get('social_dribbble', '#') }}" target="_blank" rel="noopener noreferrer"><iconify-icon icon="lucide:dribbble"></iconify-icon> Dribbble</a></li>
+<li><a class="hover:text-primary transition-colors flex items-center gap-2" href="{{ settings.get('social_instagram', '#') }}" target="_blank" rel="noopener noreferrer"><iconify-icon icon="lucide:instagram"></iconify-icon> Instagram</a></li>
+<li><a class="hover:text-primary transition-colors flex items-center gap-2" href="{{ settings.get('social_twitter', '#') }}" target="_blank" rel="noopener noreferrer"><iconify-icon icon="lucide:twitter"></iconify-icon> Twitter</a></li>
+</ul>
+</div>
+</div>
+<div class="pt-8 border-t border-secondary-foreground/10 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-secondary-foreground/40">
+<p>© 2026 Alok Sharma. All rights reserved.</p>
+<div class="flex gap-6">
+<span class="text-secondary-foreground/40">Privacy Policy</span>
+<span class="text-secondary-foreground/40">Terms of Service</span>
+</div>
+</div>
+</div>
+</footer>
+</div>
+</body></html>

@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Book a Discovery Call - Alok Sharma</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Poppins:wght@100..900&family=Fira+Code:wght@300..700&family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://code.iconify.design/iconify-icon/3.0.0/iconify-icon.min.js"></script>
+    <style type="text/tailwindcss">
+      @import "tailwindcss";
+      @theme inline {
+        --color-background: var(--background);
+        --color-foreground: var(--foreground);
+        --color-primary: var(--primary);
+        --color-primary-foreground: var(--primary-foreground);
+        --color-secondary: var(--secondary);
+        --color-secondary-foreground: var(--secondary-foreground);
+        --color-tertiary: var(--tertiary);
+        --color-muted: var(--muted);
+        --color-muted-foreground: var(--muted-foreground);
+        --color-accent: var(--accent);
+        --color-destructive: var(--destructive);
+        --color-card: var(--card);
+        --color-card-foreground: var(--card-foreground);
+        --color-border: var(--border);
+        --color-input: var(--input);
+        --color-ring: var(--ring);
+        --radius-sm: calc(var(--radius) - 4px);
+        --radius-md: calc(var(--radius) - 2px);
+        --radius-lg: var(--radius);
+        --font-family-sans: var(--font-sans);
+        --font-family-heading: var(--font-heading);
+      }
+      :root { --primary-foreground: #FFFFFF;
+        --border: #EAEAEA;
+        --ring: #B30000;
+        --card: #FFFFFF;
+        --background: #FFFFFF;
+        --muted-foreground: #4A4A4A;
+        --tertiary: #4A4A4A;
+        --muted: #F8F8F8;
+        --radius: 1.5rem;
+        --accent: #F8F8F8;
+        --font-heading: 'Playfair Display', serif;
+        --secondary-foreground: #FFFFFF;
+        --input: #EAEAEA;
+        --font-sans: 'Poppins', sans-serif;
+        --secondary: #121212;
+        --destructive: #B30000;
+        --card-foreground: #121212;
+        --foreground: #121212;
+        --primary: #B30000; }
+    </style>
+  </head>
+  <body class="overflow-x-hidden">
+<div class="min-h-screen w-full bg-background text-foreground flex flex-col relative font-sans">
+  
+  <!-- Navbar -->
+  <header class="w-full py-6 px-8 md:px-16 flex justify-between items-center bg-background/80 backdrop-blur-md sticky top-0 z-50 border-b border-border/50">
+    <a href="/" class="text-2xl font-heading font-bold tracking-tight">
+      Alok<span class="text-primary">Sharma</span>
+    </a>
+    <nav class="hidden lg:flex gap-8 text-sm font-medium text-muted-foreground">
+      <a href="/#work" class="hover:text-foreground transition-colors">Work</a>
+      <a href="/#services" class="hover:text-foreground transition-colors">Services</a>
+      <a href="/#about" class="hover:text-foreground transition-colors">About</a>
+      <a href="/#contact" class="hover:text-foreground transition-colors">Contact</a>
+    </nav>
+    <a href="/#contact" class="hidden md:inline-flex items-center justify-center px-6 py-3 bg-foreground text-background rounded-full text-sm font-medium hover:bg-primary hover:text-primary-foreground transition-colors">
+      Hire Me
+    </a>
+    <button class="lg:hidden text-2xl">
+      <iconify-icon icon="lucide:menu"></iconify-icon>
+    </button>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-1 w-full py-20 px-8 md:px-16 max-w-[1200px] mx-auto">
+    
+    <div class="text-center max-w-2xl mx-auto mb-16">
+      <span class="text-primary font-bold tracking-widest uppercase text-sm mb-4 block">Scheduling</span>
+      <h1 class="text-5xl md:text-6xl font-heading font-bold text-foreground mb-6">Book a Discovery Call</h1>
+      <p class="text-lg text-muted-foreground">Find a time that works for you. Let's discuss your vision and how we can bring it to life.</p>
+    </div>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="mb-8 space-y-4 max-w-lg mx-auto">
+          {% for category, msg in messages %}
+            <div class="flash-alert p-5 rounded-2xl border text-sm font-medium cursor-pointer {% if category == 'success' %}bg-green-50 text-green-800 border-green-200{% else %}bg-red-50 text-red-800 border-red-200{% endif %}" onclick="this.remove()">
+              {{ msg }}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <div class="bg-card border border-border rounded-3xl shadow-xl flex flex-col lg:flex-row overflow-hidden">
+      
+      <!-- Left: Event Details -->
+      <div class="w-full lg:w-1/3 bg-muted p-8 md:p-12 border-r border-border flex flex-col">
+        <div class="w-16 h-16 rounded-full overflow-hidden mb-6 border-2 border-primary">
+          <img src="https://uxmagic.blob.core.windows.net/user/6a25a369277cb05ad3d0b425/project-assets/6a25f802dabb320111e4b8ed/work_pfpwide-1780873234357-bq8w5hzew.jpg" alt="Alok" class="w-full h-full object-cover">
+        </div>
+        <p class="text-sm font-bold text-muted-foreground mb-1">Alok Sharma</p>
+        <h2 class="text-2xl font-heading font-bold text-foreground mb-6">Project Discovery Call</h2>
+        
+        <div class="flex flex-col gap-4 text-foreground font-medium">
+          <div class="flex items-center gap-3">
+            <iconify-icon icon="lucide:clock" class="text-primary text-xl"></iconify-icon>
+            30 min
+          </div>
+          <div class="flex items-center gap-3">
+            <iconify-icon icon="lucide:video" class="text-primary text-xl"></iconify-icon>
+            Google Meet
+          </div>
+        </div>
+        
+        <p class="text-muted-foreground mt-8 text-sm leading-relaxed">
+          During this call, we'll discuss your project goals, timeline, and budget. It's a casual chat to see if we're a good fit for each other. Please have your requirements ready.
+        </p>
+      </div>
+
+      <!-- Right: Calendar & Info Form -->
+      <form method="POST" action="/book" class="w-full lg:w-2/3 p-8 md:p-12 flex flex-col gap-10">
+        
+        <!-- Hidden Inputs for selected Date & Time -->
+        <input type="hidden" name="booking_date" id="selected_date" value="2026-06-11">
+        <input type="hidden" name="booking_time" id="selected_time" value="11:30 AM">
+
+        <div class="flex flex-col md:flex-row gap-12">
+          <!-- Calendar -->
+          <div class="flex-1">
+            <h3 class="text-xl font-bold text-foreground mb-6">1. Select a Date</h3>
+            
+            <div class="flex justify-between items-center mb-6">
+              <button type="button" onclick="changeMonth(-1)" class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-muted text-foreground transition-colors cursor-pointer">
+                <iconify-icon icon="lucide:chevron-left"></iconify-icon>
+              </button>
+              <span class="font-bold text-foreground text-lg" id="month_year_header">June 2026</span>
+              <button type="button" onclick="changeMonth(1)" class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-muted text-foreground transition-colors cursor-pointer">
+                <iconify-icon icon="lucide:chevron-right"></iconify-icon>
+              </button>
+            </div>
+            
+            <div class="grid grid-cols-7 gap-2 text-center mb-2">
+              <span class="text-xs font-bold text-muted-foreground uppercase">Su</span>
+              <span class="text-xs font-bold text-muted-foreground uppercase">Mo</span>
+              <span class="text-xs font-bold text-muted-foreground uppercase">Tu</span>
+              <span class="text-xs font-bold text-muted-foreground uppercase">We</span>
+              <span class="text-xs font-bold text-muted-foreground uppercase">Th</span>
+              <span class="text-xs font-bold text-muted-foreground uppercase">Fr</span>
+              <span class="text-xs font-bold text-muted-foreground uppercase">Sa</span>
+            </div>
+            
+            <!-- Dynamic Calendar Days Grid -->
+            <div class="grid grid-cols-7 gap-2 text-center" id="calendar_days">
+              <!-- Rendered Dynamically via JS -->
+            </div>
+          </div>
+          
+          <!-- Time Slots -->
+          <div class="w-full md:w-48 flex flex-col gap-3">
+            <h3 class="text-xl font-bold text-foreground mb-6">2. Select a Time</h3>
+            <p class="text-sm font-bold text-foreground mb-2 text-center md:text-left" id="current_date_label">Thursday, Jun 11</p>
+            
+            <div class="flex flex-col gap-3" id="time_slots_container">
+              <button type="button" onclick="selectTime('09:00 AM', this)" class="time-btn w-full py-3 border border-primary text-primary rounded-xl font-bold hover:bg-primary hover:text-primary-foreground transition-colors cursor-pointer">09:00 AM</button>
+              <button type="button" onclick="selectTime('10:00 AM', this)" class="time-btn w-full py-3 border border-primary text-primary rounded-xl font-bold hover:bg-primary hover:text-primary-foreground transition-colors cursor-pointer">10:00 AM</button>
+              <button type="button" onclick="selectTime('11:30 AM', this)" class="time-btn w-full py-3 bg-primary text-primary-foreground rounded-xl font-bold shadow-md time-btn-active cursor-pointer">11:30 AM</button>
+              <button type="button" onclick="selectTime('02:00 PM', this)" class="time-btn w-full py-3 border border-primary text-primary rounded-xl font-bold hover:bg-primary hover:text-primary-foreground transition-colors cursor-pointer">02:00 PM</button>
+              <button type="button" onclick="selectTime('04:30 PM', this)" class="time-btn w-full py-3 border border-primary text-primary rounded-xl font-bold hover:bg-primary hover:text-primary-foreground transition-colors cursor-pointer">04:30 PM</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Details Input Form -->
+        <div class="border-t border-border pt-8 flex flex-col gap-6">
+          <h3 class="text-xl font-bold text-foreground">3. Your Information</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="flex flex-col gap-2">
+              <label class="text-sm font-bold text-foreground">Your Name *</label>
+              <input type="text" name="name" required placeholder="Jane Doe" class="w-full px-5 py-4 bg-muted border-none rounded-2xl focus:ring-2 focus:ring-primary outline-none transition-all">
+            </div>
+            <div class="flex flex-col gap-2">
+              <label class="text-sm font-bold text-foreground">Email Address *</label>
+              <input type="email" name="email" required placeholder="jane@company.com" class="w-full px-5 py-4 bg-muted border-none rounded-2xl focus:ring-2 focus:ring-primary outline-none transition-all">
+            </div>
+          </div>
+          
+          <div class="flex items-center justify-between mt-4">
+            <p class="text-sm text-muted-foreground">* Required fields</p>
+            <button type="submit" class="px-10 py-5 bg-foreground text-background rounded-full font-bold text-lg hover:bg-primary hover:text-primary-foreground transition-colors shadow-xl flex items-center gap-2">
+              Confirm Booking
+              <iconify-icon icon="lucide:check-circle"></iconify-icon>
+            </button>
+          </div>
+        </div>
+
+      </form>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="w-full bg-secondary text-secondary-foreground py-16 px-8 md:px-16 mt-auto">
+    <div class="max-w-[1400px] mx-auto">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+        
+        <div class="md:col-span-2">
+          <a href="/" class="text-3xl font-heading font-bold tracking-tight mb-6 block">
+            Alok<span class="text-primary">Sharma</span>
+          </a>
+          <p class="text-secondary-foreground/60 max-w-sm mb-8">
+            Elevating brands through strategic UI/UX and visually compelling graphic design.
+          </p>
+          <div class="flex items-center gap-4 text-secondary-foreground/60">
+            <iconify-icon icon="lucide:map-pin" class="text-xl"></iconify-icon>
+            <span>Delhi, India</span>
+          </div>
+        </div>
+        
+        <div>
+          <h4 class="font-bold mb-6 text-lg">Navigation</h4>
+          <ul class="space-y-4 text-secondary-foreground/60">
+            <li><a href="/#work" class="hover:text-primary transition-colors">Selected Work</a></li>
+            <li><a href="/#services" class="hover:text-primary transition-colors">Services</a></li>
+            <li><a href="/#about" class="hover:text-primary transition-colors">About Me</a></li>
+            <li><a href="/#contact" class="hover:text-primary transition-colors">Contact</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 class="font-bold mb-6 text-lg">Socials</h4>
+          <ul class="space-y-4 text-secondary-foreground/60">
+            <li><a href="#" class="hover:text-primary transition-colors flex items-center gap-2"><iconify-icon icon="lucide:linkedin"></iconify-icon> LinkedIn</a></li>
+            <li><a href="#" class="hover:text-primary transition-colors flex items-center gap-2"><iconify-icon icon="lucide:dribbble"></iconify-icon> Dribbble</a></li>
+            <li><a href="#" class="hover:text-primary transition-colors flex items-center gap-2"><iconify-icon icon="lucide:instagram"></iconify-icon> Instagram</a></li>
+            <li><a href="#" class="hover:text-primary transition-colors flex items-center gap-2"><iconify-icon icon="lucide:twitter"></iconify-icon> Twitter</a></li>
+          </ul>
+        </div>
+        
+      </div>
+      
+      <div class="pt-8 border-t border-secondary-foreground/10 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-secondary-foreground/40">
+        <p>© 2025 Alok Sharma. All rights reserved.</p>
+        <div class="flex gap-6">
+          <span class="text-secondary-foreground/40">Privacy Policy</span>
+          <span class="text-secondary-foreground/40">Terms of Service</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</div>
+
+<!-- Interactive Scheduling Scripts -->
+<script>
+  let currentYear = 2026;
+  let currentMonth = 5; // June (0-indexed)
+  let selectedDateStr = "2026-06-11";
+  let selectedTimeStr = "11:30 AM";
+
+  const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+  function renderCalendar() {
+      // Get first day of month (e.g. Wednesday in June 2026)
+      const firstDay = new Date(currentYear, currentMonth, 1);
+      const lastDay = new Date(currentYear, currentMonth + 1, 0);
+      const numDays = lastDay.getDate();
+      const startDayIndex = firstDay.getDay(); // Sunday is 0, Monday is 1...
+      
+      document.getElementById('month_year_header').innerText = `${monthNames[currentMonth]} ${currentYear}`;
+      
+      const grid = document.getElementById('calendar_days');
+      grid.innerHTML = '';
+      
+      // Empty cells before first day of month
+      for (let i = 0; i < startDayIndex; i++) {
+          const emptyDiv = document.createElement('div');
+          grid.appendChild(emptyDiv);
+      }
+      
+      // Generate day buttons
+      for (let day = 1; day <= numDays; day++) {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          
+          const monthStr = String(currentMonth + 1).padStart(2, '0');
+          const dayStr = String(day).padStart(2, '0');
+          const dateStr = `${currentYear}-${monthStr}-${dayStr}`;
+          
+          btn.innerText = day;
+          btn.onclick = () => selectDate(dateStr, btn);
+          
+          btn.className = "aspect-square rounded-full flex items-center justify-center font-semibold transition-colors text-foreground hover:bg-muted cursor-pointer";
+          
+          if (dateStr === selectedDateStr) {
+              btn.className = "aspect-square rounded-full flex items-center justify-center font-bold bg-primary text-primary-foreground shadow-md date-btn-active cursor-pointer";
+          }
+          
+          grid.appendChild(btn);
+      }
+  }
+
+  function selectDate(dateStr, btnElement) {
+      selectedDateStr = dateStr;
+      document.getElementById('selected_date').value = dateStr;
+      
+      // Update label timezone-neutrally
+      const parts = dateStr.split('-');
+      const y = parseInt(parts[0], 10);
+      const m = parseInt(parts[1], 10) - 1;
+      const d = parseInt(parts[2], 10);
+      const dateObj = new Date(y, m, d);
+      
+      const options = { weekday: 'long', month: 'short', day: 'numeric' };
+      document.getElementById('current_date_label').innerText = dateObj.toLocaleDateString('en-US', options);
+      
+      renderCalendar();
+  }
+
+  function selectTime(timeStr, btnElement) {
+      selectedTimeStr = timeStr;
+      document.getElementById('selected_time').value = timeStr;
+      
+      const timeButtons = document.querySelectorAll('#time_slots_container button');
+      timeButtons.forEach(btn => {
+          btn.className = "time-btn w-full py-3 border border-primary text-primary rounded-xl font-bold hover:bg-primary hover:text-primary-foreground transition-colors cursor-pointer";
+      });
+      
+      btnElement.className = "w-full py-3 bg-primary text-primary-foreground rounded-xl font-bold shadow-md time-btn-active cursor-pointer";
+  }
+
+  function changeMonth(direction) {
+      currentMonth += direction;
+      if (currentMonth < 0) {
+          currentMonth = 11;
+          currentYear--;
+      } else if (currentMonth > 11) {
+          currentMonth = 0;
+          currentYear++;
+      }
+      renderCalendar();
+  }
+
+  // Initial load
+  document.addEventListener("DOMContentLoaded", () => {
+      renderCalendar();
+      
+      // Auto-hide alert notifications after 2 seconds (2000ms)
+      setTimeout(() => {
+        document.querySelectorAll('.flash-alert').forEach(alert => {
+          alert.style.transition = 'opacity 0.5s ease-out, transform 0.5s ease-out';
+          alert.style.opacity = '0';
+          alert.style.transform = 'translateY(-10px)';
+          setTimeout(() => alert.remove(), 500);
+        });
+      }, 2000);
+  });
+</script>
+
+</body></html>

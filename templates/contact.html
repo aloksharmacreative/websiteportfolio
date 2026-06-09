@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Contact - Alok Sharma</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;family=Poppins:wght@100..900&amp;family=Fira+Code:wght@300..700&amp;family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<script src="https://code.iconify.design/iconify-icon/3.0.0/iconify-icon.min.js"></script>
+<style type="text/tailwindcss">
+      @import "tailwindcss";
+      @theme inline {
+        --color-background: var(--background);
+        --color-foreground: var(--foreground);
+        --color-primary: var(--primary);
+        --color-primary-foreground: var(--primary-foreground);
+        --color-secondary: var(--secondary);
+        --color-secondary-foreground: var(--secondary-foreground);
+        --color-tertiary: var(--tertiary);
+        --color-muted: var(--muted);
+        --color-muted-foreground: var(--muted-foreground);
+        --color-accent: var(--accent);
+        --color-destructive: var(--destructive);
+        --color-card: var(--card);
+        --color-card-foreground: var(--card-foreground);
+        --color-border: var(--border);
+        --color-input: var(--input);
+        --color-ring: var(--ring);
+        --radius-sm: calc(var(--radius) - 4px);
+        --radius-md: calc(var(--radius) - 2px);
+        --radius-lg: var(--radius);
+        --font-family-sans: var(--font-sans);
+        --font-family-heading: var(--font-heading);
+      }
+      :root { --primary-foreground: #FFFFFF;
+        --border: #EAEAEA;
+        --ring: #B30000;
+        --card: #FFFFFF;
+        --background: #FFFFFF;
+        --muted-foreground: #4A4A4A;
+        --tertiary: #4A4A4A;
+        --muted: #F8F8F8;
+        --radius: 1.5rem;
+        --accent: #F8F8F8;
+        --font-heading: 'Playfair Display', serif;
+        --secondary-foreground: #FFFFFF;
+        --input: #EAEAEA;
+        --font-sans: 'Poppins', sans-serif;
+        --secondary: #121212;
+        --destructive: #B30000;
+        --card-foreground: #121212;
+        --foreground: #121212;
+        --primary: #B30000; }
+    </style>
+</head>
+<body class="overflow-x-hidden">
+<div class="min-h-screen w-full bg-background text-foreground flex flex-col relative font-sans">
+<!-- Navbar -->
+<header class="w-full py-6 px-8 md:px-16 flex justify-between items-center bg-background/80 backdrop-blur-md sticky top-0 z-50 border-b border-border/50">
+<a class="text-2xl font-heading font-bold tracking-tight" href="/">
+      Alok<span class="text-primary">Sharma</span>
+</a>
+<nav class="hidden lg:flex gap-8 text-sm font-medium text-muted-foreground">
+<a class="hover:text-foreground transition-colors" href="/#work">Work</a>
+<a class="hover:text-foreground transition-colors" href="/#services">Services</a>
+<a class="hover:text-foreground transition-colors" href="/#about">About</a>
+<a class="hover:text-foreground transition-colors" href="/#contact">Contact</a>
+</nav>
+<a class="hidden md:inline-flex items-center justify-center px-6 py-3 bg-foreground text-background rounded-full text-sm font-medium hover:bg-primary hover:text-primary-foreground transition-colors" href="/#contact">
+      Hire Me
+    </a>
+<button class="lg:hidden text-2xl">
+<iconify-icon icon="lucide:menu"></iconify-icon>
+</button>
+</header>
+<!-- Main Content -->
+<main class="flex-1 w-full py-20 px-8 md:px-16 max-w-[1200px] mx-auto flex flex-col lg:flex-row gap-16">
+<!-- Left Info -->
+<div class="w-full lg:w-5/12 flex flex-col gap-8">
+<span class="text-primary font-bold tracking-widest uppercase text-sm">Contact</span>
+<h1 class="text-5xl md:text-6xl font-heading font-bold text-foreground leading-tight">Drop me a line.</h1>
+<p class="text-lg text-muted-foreground">Have a question or just want to say hi? I'd love to hear from you. Fill out the form and I'll get back to you within 24 hours.</p>
+<div class="flex flex-col gap-6 mt-8">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-muted flex items-center justify-center text-primary text-xl">
+<iconify-icon icon="lucide:mail"></iconify-icon>
+</div>
+<div>
+<p class="text-sm font-bold text-foreground">Email</p>
+<p class="text-muted-foreground">aloksharma.creative@gmail.com</p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-muted flex items-center justify-center text-primary text-xl">
+<iconify-icon icon="lucide:phone"></iconify-icon>
+</div>
+<div>
+<p class="text-sm font-bold text-foreground">Phone</p>
+<p class="text-muted-foreground">+91 7011212596</p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-muted flex items-center justify-center text-primary text-xl">
+<iconify-icon icon="lucide:map-pin"></iconify-icon>
+</div>
+<div>
+<p class="text-sm font-bold text-foreground">Location</p>
+<p class="text-muted-foreground">Delhi, India</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Form -->
+<div class="w-full lg:w-7/12 bg-card border border-border p-8 md:p-12 rounded-3xl shadow-xl">
+<!-- Flash Messages -->
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <div class="mb-6 space-y-4">
+            {% for category, msg in messages %}
+              <div class="flash-alert p-5 rounded-2xl border text-sm font-medium cursor-pointer {% if category == 'success' %}bg-green-50 text-green-800 border-green-200{% else %}bg-red-50 text-red-800 border-red-200{% endif %}" onclick="this.remove()">
+                {{ msg }}
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+
+      <form action="/contact" class="flex flex-col gap-6" method="POST">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="flex flex-col gap-2">
+<label class="text-sm font-bold text-foreground">First Name</label>
+<input class="w-full px-5 py-4 bg-muted border-none rounded-2xl focus:ring-2 focus:ring-primary outline-none transition-all" name="first_name" placeholder="John" required="" type="text"/>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-sm font-bold text-foreground">Last Name</label>
+<input class="w-full px-5 py-4 bg-muted border-none rounded-2xl focus:ring-2 focus:ring-primary outline-none transition-all" name="last_name" placeholder="Doe" type="text"/>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-sm font-bold text-foreground">Email Address</label>
+<input class="w-full px-5 py-4 bg-muted border-none rounded-2xl focus:ring-2 focus:ring-primary outline-none transition-all" name="email" placeholder="john@example.com" required="" type="email"/>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-sm font-bold text-foreground">Subject</label>
+<input class="w-full px-5 py-4 bg-muted border-none rounded-2xl focus:ring-2 focus:ring-primary outline-none transition-all" name="subject" placeholder="How can I help you?" required="" type="text"/>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-sm font-bold text-foreground">Message</label>
+<textarea class="w-full px-5 py-4 bg-muted border-none rounded-2xl focus:ring-2 focus:ring-primary outline-none transition-all resize-none" name="message" placeholder="Write your message here..." required="" rows="5"></textarea>
+</div>
+<button class="w-full py-4 bg-primary text-primary-foreground rounded-full font-bold text-lg hover:bg-foreground transition-colors mt-4 flex items-center justify-center gap-2" type="submit">
+          Send Message
+          <iconify-icon class="text-xl" icon="lucide:send"></iconify-icon>
+</button>
+</form>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full bg-secondary text-secondary-foreground py-16 px-8 md:px-16 mt-auto">
+<div class="max-w-[1400px] mx-auto">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+<div class="md:col-span-2">
+<a class="text-3xl font-heading font-bold tracking-tight mb-6" href="/">
+            Alok<span class="text-primary">Sharma</span>
+</a>
+<p class="text-secondary-foreground/60 max-w-sm mb-8">
+            Elevating brands through strategic UI/UX and visually compelling graphic design.
+          </p>
+<div class="flex items-center gap-4 text-secondary-foreground/60">
+<iconify-icon class="text-xl" icon="lucide:map-pin"></iconify-icon>
+<span>Delhi, India</span>
+</div>
+</div>
+<div>
+<h4 class="font-bold mb-6 text-lg">Navigation</h4>
+<ul class="space-y-4 text-secondary-foreground/60">
+<li><a class="hover:text-primary transition-colors" href="/">Selected Work</a></li>
+<li><a class="hover:text-primary transition-colors" href="/#services">Services</a></li>
+<li><a class="hover:text-primary transition-colors" href="/#about">About Me</a></li>
+<li><a class="hover:text-primary transition-colors" href="/#contact">Contact</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-bold mb-6 text-lg">Socials</h4>
+<ul class="space-y-4 text-secondary-foreground/60">
+<li><a class="hover:text-primary transition-colors flex items-center gap-2" href="#"><iconify-icon icon="lucide:linkedin"></iconify-icon> LinkedIn</a></li>
+<li><a class="hover:text-primary transition-colors flex items-center gap-2" href="#"><iconify-icon icon="lucide:dribbble"></iconify-icon> Dribbble</a></li>
+<li><a class="hover:text-primary transition-colors flex items-center gap-2" href="#"><iconify-icon icon="lucide:instagram"></iconify-icon> Instagram</a></li>
+<li><a class="hover:text-primary transition-colors flex items-center gap-2" href="#"><iconify-icon icon="lucide:twitter"></iconify-icon> Twitter</a></li>
+</ul>
+</div>
+</div>
+<div class="pt-8 border-t border-secondary-foreground/10 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-secondary-foreground/40">
+<p>© 2025 Alok Sharma. All rights reserved.</p>
+<div class="flex gap-6">
+<span class="text-secondary-foreground/40">Privacy Policy</span>
+<span class="text-secondary-foreground/40">Terms of Service</span>
+</div>
+</div>
+</div>
+</footer>
+</div>
+<script>
+  // Auto-hide alert notifications after 2 seconds (2000ms)
+  setTimeout(() => {
+    document.querySelectorAll('.flash-alert').forEach(alert => {
+      alert.style.transition = 'opacity 0.5s ease-out, transform 0.5s ease-out';
+      alert.style.opacity = '0';
+      alert.style.transform = 'translateY(-10px)';
+      setTimeout(() => alert.remove(), 500);
+    });
+  }, 2000);
+</script>
+</body></html>
